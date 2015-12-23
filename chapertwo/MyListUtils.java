@@ -82,7 +82,7 @@ public class MyListUtils {
         }
         Node fast = head;
         Node slow = head;
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < k; i++) {// 提前走k步
             if (fast == null) {
                 return head;
             }
@@ -95,6 +95,64 @@ public class MyListUtils {
         slow.next = slow.next.next;
         return head;
     }
+    /**
+     * 删除双链表的倒数第K个结点
+     */
+    /*
+     * 与上面大同小异，这时要考虑前后两个指向
+     * 头结点与尾节点是重要的结点
+     */
+    public static DoubleNode delKthDoubleNode(DoubleNode head, int k) {
+        if (head == null || k < 1) {
+            return head;
+        }
+        DoubleNode curr = head;
+        while (curr != null) {
+            curr = curr.next;
+            k--;
+        }
+        if (k == 0) {
+            head = head.next;
+            head.prev = null;// 结果要返回head，所以不可以直接head.next.prev
+        }
+        if (k < 0) {
+            curr = head;
+            while (++k != 0) {
+                curr = curr.next;
+            }
+            DoubleNode delNodeNext = curr.next.next;// 要删除的结点的下一个结点
+            curr.next = delNodeNext;
+            if (delNodeNext != null) {// 删除的不是最后一个结点的情况还要改变前趋
+                curr = delNodeNext.prev;
+            }
+        }
+        return head;
+    }
+    /**
+     * 删除单链表的中间结点
+     */
+    /*
+     * 单链表删除某个结点最重要的就是要找到要删除结点的上一个结点
+     */
+    public static Node delMidNode(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        
+        if (head.next.next == null) {// 两个结点，删除第一个
+            return head.next;
+        }
+        Node slow = head;
+        Node fast = head.next.next;
+        while (fast.next != null && fast.next.next != null) {// 奇数个结点与偶数个结点
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+    
+    
     
     
 }
