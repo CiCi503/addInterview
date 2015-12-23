@@ -1,4 +1,3 @@
 # addInterview
-**Preparing for interview**
-
+**Algorithm exercise**
 **Coding with Java**
