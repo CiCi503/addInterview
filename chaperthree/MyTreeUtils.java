@@ -185,56 +185,61 @@ public class MyTreeUtils {
     /**
      * 输入某二叉树的先序和中序遍历结果，要求重建二叉树。 
      * 注：遍历结果中不含相同的结点值。
+     * @throws Exception 
      */
     /*
      * 先序遍历数组的第一个元素就是遍历树的根结点， 中序遍历数组的根节点两侧分别为左右子树的遍历
      */
-    public static TreeNode rebuildTreepreIn(int[] pre, int[] inorder) {
-        if (pre == null || inorder == null) {
+    public static TreeNode rebuildTreepreIn(int[] preorder, int[] inorder) throws Exception {
+        if (preorder == null || inorder == null) {
             return null;
         }
-        Map<Integer, Integer> inMap = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> inorderMap = new HashMap<Integer, Integer>();
         for (int i = 0; i < inorder.length; i++) {
-            inMap.put(inorder[i], i);
+            inorderMap.put(inorder[i], i);
         }
-        return rebuildPreInHelper(pre, 0, pre.length - 1, inorder, 0,
-                inorder.length - 1, inMap);
+        return rebuildPreInHelper(preorder, 0, preorder.length - 1, inorder, 0,
+                inorder.length - 1, inorderMap);
     }
 
     /**
      * 
-     * @param pre
+     * @param preorder
      *            前序遍历数组
-     * @param stIndexPre
+     * @param startPre
      *            前序遍历数组的开始索引
-     * @param endIndexPre
+     * @param endPre
      *            前序遍历数组的末尾索引
      * @param inorder
      *            中序遍历数组
-     * @param stIndexIn
+     * @param startInorder
      *            中序遍历数组的开始索引
-     * @param eIndexIn
+     * @param endInorder
      *            中序遍历数组的末尾索引
-     * @param inMap
+     * @param inorderMap
      *            存放中序遍历数组的元素及其索引的map
      * @return
+     * @throws Exception 
      */
-    private static TreeNode rebuildPreInHelper(int[] pre, int stIndexPre,
-            int endIndexPre, int[] inorder, int stIndexIn, int eIndexIn,
-            Map<Integer, Integer> inMap) {
-        // 前序遍历的首索引是stIndexPre + 1，尾索引为 stIndexPre + 左子树结点数，
+    private static TreeNode rebuildPreInHelper(int[] preorder, int startPre,
+            int endPre, int[] inorder, int startInorder, int endInorder,
+            Map<Integer, Integer> inorderMap) throws Exception {
+        // 前序遍历的首索引是startPre + 1，尾索引为 startPre + 左子树结点数，
         // 某结点没有左孩子了，那么下一次递归会出现首索引大于尾索引的情况，这时应该停止
-        if (stIndexPre > endIndexPre) {
+        if (startPre > endPre) {
             return null;
         }
-        TreeNode root = new TreeNode(pre[stIndexPre]);
-        int pos = inMap.get(pre[stIndexPre]);
-        // 处理左子树，左子树结点数为 pos - sIndexIn
-        root.left = rebuildPreInHelper(pre, stIndexPre + 1, stIndexPre + pos - stIndexIn,
-                inorder, stIndexIn, pos - 1, inMap);
+        TreeNode root = new TreeNode(preorder[startPre]);
+        int rootIndex = inorderMap.get(preorder[startPre]);
+        if (rootIndex < startInorder || rootIndex > endInorder) {// 前后序遍历数组不匹配
+            throw new Exception("inorderTraverse doesn't match preorderTraverse!");
+        }
+        // 处理左子树，左子树结点数为 rootIndex - startInorder
+        root.left = rebuildPreInHelper(preorder, startPre + 1, startPre + rootIndex - startInorder,
+                inorder, startInorder, rootIndex - 1, inorderMap);
         // 处理右子树，前序遍历数组中右子树遍历开始的索引为左子树结束的索引加1
-        root.right = rebuildPreInHelper(pre, stIndexPre + pos - stIndexIn + 1,
-                endIndexPre, inorder, pos + 1, eIndexIn, inMap);
+        root.right = rebuildPreInHelper(preorder, startPre + rootIndex - startInorder + 1,
+                endPre, inorder, rootIndex + 1, endInorder, inorderMap);
         return root;
     }
 
@@ -244,30 +249,31 @@ public class MyTreeUtils {
     /*
      * 跟先序和中序重建类似，只是现在的根节点在后序遍历数组的最后一个， 关键点也是找到后序遍历数组的始末索引
      */
-    public static TreeNode rebuildTreeInPost(int[] inorder, int[] post) {
-        if (inorder == null || post == null) {
+    public static TreeNode rebuildTreeInPost(int[] inorder, int[] postorder) {
+        if (inorder == null || postorder == null) {
             return null;
         }
-        Map<Integer, Integer> inMap = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> inorderMap = new HashMap<Integer, Integer>();
         for (int i = 0; i < inorder.length; i++) {
-            inMap.put(inorder[i], i);
+            inorderMap.put(inorder[i], i);
         }
-        return rebuildInPostHelper(inorder, 0, inorder.length - 1, post, 0,
-                post.length - 1, inMap);
+        return rebuildInPostHelper(inorder, 0, inorder.length - 1, postorder, 0,
+                postorder.length - 1, inorderMap);
     }
     
-    private static TreeNode rebuildInPostHelper(int[] inorder, int stIndexIn,
-            int endIndexIn, int[] post, int stIndexPost, int endIndexPost,
+    private static TreeNode rebuildInPostHelper(int[] inorder, int startInorder,
+            int endInorder, int[] postorder, int startPost, int endPost,
             Map<Integer, Integer> inMap) {
-        if (stIndexPost > endIndexPost) {// 道理同上
+        if (startPost > endPost) {// 道理同上
             return null;
         }
-        TreeNode root = new TreeNode(post[endIndexPost]);
-        int pos = inMap.get(post[endIndexPost]);
-        root.left = rebuildInPostHelper(inorder, stIndexIn, pos - 1, post,
-                stIndexPost, stIndexPost + pos - stIndexIn - 1, inMap);
-        root.right = rebuildInPostHelper(inorder, pos + 1, endIndexIn, post,
-                stIndexPost + pos - stIndexIn, endIndexPost - 1, inMap);
+        // TODO validate
+        TreeNode root = new TreeNode(postorder[endPost]);
+        int pos = inMap.get(postorder[endPost]);
+        root.left = rebuildInPostHelper(inorder, startInorder, pos - 1, postorder,
+                startPost, startPost + pos - startInorder - 1, inMap);
+        root.right = rebuildInPostHelper(inorder, pos + 1, endInorder, postorder,
+                startPost + pos - startInorder, endPost - 1, inMap);
         return root;
     }
 
@@ -283,31 +289,32 @@ public class MyTreeUtils {
      * 该树的前后序遍历结果都是 [1, 2]
      * 若一二叉树除了左右节点之外，其他所有的结点都有左右孩子，那么可以根据前后序进行重建 
      */
-    public static TreeNode rebuildTreePrePost(int[] pre, int[] post) {
-        if (pre == null || post == null) {
+    public static TreeNode rebuildTreePrePost(int[] preorder, int[] postorder) {
+        if (preorder == null || postorder == null) {
             return null;
         }
         Map<Integer, Integer> postMap = new HashMap<Integer, Integer>();
-        for (int i = 0; i < post.length; i++) {
-            postMap.put(post[i], i);
+        for (int i = 0; i < postorder.length; i++) {
+            postMap.put(postorder[i], i);
         }
-        return rebuildPrePostHelper(pre, 0, pre.length - 1, post, 0,
-                post.length - 1, postMap);
+        return rebuildPrePostHelper(preorder, 0, preorder.length - 1, postorder, 0,
+                postorder.length - 1, postMap);
     }
     
-    private static TreeNode rebuildPrePostHelper(int[] pre, int stIndexPre,
-            int endIndexPre, int[] post, int stIndexPost, int endIndexPost,
+    private static TreeNode rebuildPrePostHelper(int[] preorder, int startPre,
+            int endPre, int[] postorder, int startPost, int endPost,
             Map<Integer, Integer> postMap) {
-        TreeNode root = new TreeNode(pre[stIndexPre]);
-        if (stIndexPre == endIndexPre) {// 碰到没有左子树的情况，那么这一定是个叶节点，返回这个结点
+        TreeNode root = new TreeNode(preorder[startPre]);
+        if (startPre == endPre) {// 碰到没有左子树的情况，那么这一定是个叶节点，返回这个结点
             return root;
         }
      // 先序遍历数组中根节点的下一个结点是左子树的根结点，在后序遍历中是最后一个结点
-        int pos = postMap.get(pre[++stIndexPre]);
-        root.left = rebuildPrePostHelper(pre, stIndexPre, stIndexPre + pos - stIndexPost, 
-                post, stIndexPost, pos, postMap);
-        root.right = rebuildPrePostHelper(pre, stIndexPre + pos - stIndexPost + 1, 
-                endIndexPre, post, pos + 1, endIndexPost - 1, postMap);
+     // TODO validate
+        int pos = postMap.get(preorder[++startPre]);
+        root.left = rebuildPrePostHelper(preorder, startPre, startPre + pos - startPost, 
+                postorder, startPost, pos, postMap);
+        root.right = rebuildPrePostHelper(preorder, startPre + pos - startPost + 1, 
+                endPre, postorder, pos + 1, endPost - 1, postMap);
         return root;
     }
 
