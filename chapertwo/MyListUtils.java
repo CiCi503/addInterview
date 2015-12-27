@@ -1,7 +1,7 @@
 package chapertwo;
 
 public class MyListUtils {
-    
+
     /**
      * 正向遍历单链表
      */
@@ -15,11 +15,28 @@ public class MyListUtils {
         }
         System.out.println();
     }
+
+    /**
+     * 获取单链表的长度
+     */
+    public static int getSize(Node head) {
+        if (head == null) {
+            return 0;
+        }
+        Node curr = head;
+        int length = 0;
+        while (curr != null) {
+            length++;
+            curr = curr.next;
+        }
+        return length;
+    }
+
     /**
      * 两个有序单链表，找出它们结点value相同的结点
      */
     public static void printCommPart(Node head1, Node head2) {
-        if (head1==null || head2 == null) {
+        if (head1 == null || head2 == null) {
             return;
         }
         System.out.println("The common node value:");
@@ -36,24 +53,26 @@ public class MyListUtils {
         }
         System.out.println();
     }
+
     /**
      * 删除单链表的倒数第K个结点
      */
-    /* 
-     * 倒数第k个结点是正数第n-k+1个结点（序号为n-k），实际要找的是它（要删除的结点）的前一个结点
-     * 一定要注意序号
+    /*
+     * 倒数第k个结点是正数第n-k+1个结点（序号为n-k），实际要找的是它（要删除的结点）的前一个结点 
+     * 一定要注意序号 
      * 方法1：
-     * 遍历单链表，每经过一个结点，k减去1，那么遍历到单链表末尾时，k可能有三种情况：
+     * 遍历单链表，每经过一个结点，k减去1，那么遍历到单链表末尾时，
+     * k可能有三种情况： 
      * k=0,说明单链表的头结点就是要删除的结点
      * k>0,k比整个单链表的长度还要大，参数不合理，返回head就好了
-     * k<0,参数合理，此时的k等于k-n,那么再次从头开始遍历，每经过一个结点时，k加上1，
+     * k<0,参数合理，此时的k等于k-n,那么再次从头开始遍历，每经过一个结点时，k加上1， 
      * 当k=0对应的结点就是要删除的结点
      */
     public static Node delKthNode(Node head, int k) {
         if (head == null || k < 1) {// 空链表或者k不合理
             return head;
         }
-        Node curr = head; 
+        Node curr = head;
         while (curr != null) {
             curr = curr.next;
             k--;
@@ -65,15 +84,15 @@ public class MyListUtils {
             curr = head;
             while (++k != 0) {
                 curr = curr.next;
-                
+
             }
             curr.next = curr.next.next;
         }
         return head;
     }
+
     /*
-     * 方法2
-     * 使用快慢指针
+     * 方法2 使用快慢指针
      */
     public static Node delKthNode2(Node head, int k) {
         if (head == null || k < 1) {// 空链表或者k不合理
@@ -94,12 +113,12 @@ public class MyListUtils {
         slow.next = slow.next.next;
         return head;
     }
+
     /**
      * 删除双链表的倒数第K个结点
      */
     /*
-     * 与上面大同小异，这时要考虑前后两个指向
-     * 头结点与尾节点是重要的结点
+     * 与上面大同小异，这时要考虑前后两个指向 头结点与尾节点是重要的结点
      */
     public static DoubleNode delKthDoubleNode(DoubleNode head, int k) {
         if (head == null || k < 1) {
@@ -127,6 +146,7 @@ public class MyListUtils {
         }
         return head;
     }
+
     /**
      * 删除单链表的中间结点
      */
@@ -137,7 +157,7 @@ public class MyListUtils {
         if (head == null || head.next == null) {
             return head;
         }
-        
+
         if (head.next.next == null) {// 两个结点，删除第一个
             return head.next;
         }
@@ -150,6 +170,7 @@ public class MyListUtils {
         slow.next = slow.next.next;
         return head;
     }
+
     /**
      * 删除单链表 a/b 处的结点（上取整）
      */
@@ -160,37 +181,60 @@ public class MyListUtils {
         if (head == null || a < 1 || a > b) {
             return head;
         }
-        Node curr = head;
+
         int listLen = getSize(head);
-        int delIndex = (int)Math.ceil((double)a * listLen / b);// 上取整找到要删除的结点
+        int delIndex = (int) Math.ceil((double) a * listLen / b);// 上取整找到要删除的结点
         // 单链表长度不为0，因此上取整不可能为0
-        if (delIndex == 1) {// 要删除的是头接点
-            return head.next;
-        }
+        Node dummy = new Node();// 可省去对删除第一个结点的情况的讨论
+        dummy.next = head;
+        Node curr = dummy;
         // 找到要删除结点的前一个结点
-        for (int i = 1; i < delIndex - 1 ; i++) {
+        for (int i = 1; i < delIndex; i++) {
             curr = curr.next;
         }
         curr.next = curr.next.next;
-        return head;
+        return dummy.next;
     }
+
     /**
-     * 获取单链表的长度
+     * 反转单链表
+     * 要求：若链表长度为n，则时间复杂度为O(n)，空间复杂度为O(1)
      */
-    public static int getSize(Node head) {
+    public static Node reversList(Node head) {
         if (head == null) {
-            return 0;
+            return head;
         }
         Node curr = head;
-        int length = 0;
+        Node next = null;
+        Node prev = null;
         while (curr != null) {
-            length++;
-            curr = curr.next;
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
-        return length;
+        return prev;
     }
-    
-    
+    /**
+     * 反转双向链表
+     */
+    /* 与反转单向链表的操作基本相同 */
+    public static DoubleNode reverseDoubleList(DoubleNode head) {
+        if (head == null) {
+            return head;
+        }
+        DoubleNode curr = head;
+        DoubleNode next = null;
+        DoubleNode prev = null;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            curr.prev = next;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
     
     
 }
