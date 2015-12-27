@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class MyStringUtils {
     /**
-     * ÅĞ¶ÏÁ½¸ö×Ö·û´®ÊÇ·ñÎª±äĞÎ´Ê
+     * åˆ¤æ–­ä¸¤ä¸ªå­—ç¬¦ä¸²æ˜¯å¦ä¸ºå˜å½¢è¯
      */
     /*
-     * ·½·¨1£º½«×Ö·û´®×ª»»³ÉÊı×é£¬ÈôÊÇ±äĞÎ´Ê£¬ÄÇÃ´ÅÅĞòºóµÄÁ½¸öÊı×éÔªËØË³ĞòÊÇÒ»ÖÂµÄ
-     * ÕâÖÖ×ö·¨Ğ§ÂÊ½ÏµÍ£¬µ«ÊÇ±È½ÏÖ±¹Û
+     * æ–¹æ³•1ï¼šå°†å­—ç¬¦ä¸²è½¬æ¢æˆæ•°ç»„ï¼Œè‹¥æ˜¯å˜å½¢è¯ï¼Œé‚£ä¹ˆæ’åºåçš„ä¸¤ä¸ªæ•°ç»„å…ƒç´ é¡ºåºæ˜¯ä¸€è‡´çš„
+     * è¿™ç§åšæ³•æ•ˆç‡è¾ƒä½ï¼Œä½†æ˜¯æ¯”è¾ƒç›´è§‚
      */
     public static boolean isDeformation(String str1, String str2) {
         if (str1 == null || str2 == null || str1.length() != str2.length()) {
@@ -23,12 +23,12 @@ public class MyStringUtils {
                 return false;
             }
         }
-        // »òÕß½«Êı×éÖØĞÂ×ªÎª×Ö·û´®¾ÍĞĞÅĞ¶Ï
+        // æˆ–è€…å°†æ•°ç»„é‡æ–°è½¬ä¸ºå­—ç¬¦ä¸²å°±è¡Œåˆ¤æ–­
 //        return new String(arr1).equals(new String(arr2));
         return true;
     }
     /*
-     * ·½·¨2£º¼ÙÉè×Ö·û´®ÖĞ×Ö·û¶¼ÊÇASCII×Ö·û£¬ÄÇÃ´Ê¹ÓÃÒ»¸ö³¤¶ÈÎª256µÄÊı×éÀ´¼ÇÂ¼Ã¿¸ö×Ö·ûÔÚ×Ö·û´®ÖĞ³öÏÖµÄ³¤¶È
+     * æ–¹æ³•2ï¼šå‡è®¾å­—ç¬¦ä¸²ä¸­å­—ç¬¦éƒ½æ˜¯ASCIIå­—ç¬¦ï¼Œé‚£ä¹ˆä½¿ç”¨ä¸€ä¸ªé•¿åº¦ä¸º256çš„æ•°ç»„æ¥è®°å½•æ¯ä¸ªå­—ç¬¦åœ¨å­—ç¬¦ä¸²ä¸­å‡ºç°çš„é•¿åº¦
      */
     public static boolean isDeformation2(String str1, String str2) {
         if (str1 == null || str2 == null || str1.length() != str2.length()) {
@@ -47,42 +47,130 @@ public class MyStringUtils {
     }
     
     /**
-     * ¸ø¶¨Ò»¸ö×Ö·û´®str,ÇóÆäÖĞÈ«²¿Êı×Ö×Ö´®Ëù´ú±íµÄÊı×ÖÖ®ºÍ
+     * ç»™å®šä¸€ä¸ªå­—ç¬¦ä¸²str,æ±‚å…¶ä¸­å…¨éƒ¨æ•°å­—å­—ä¸²æ‰€ä»£è¡¨çš„æ•°å­—ä¹‹å’Œ
      * 
-     * ÒªÇó£ººöÂÔĞ¡Êıµã,Èç¡°A1.3¡±£¬°üº¬1ºÍ3
-     * Èç¹ûÌù½ôÊı×Ö×Ö´®µÄ×ó²à³öÏÖ-ºÅ£¬µ±Á¬Ğø³öÏÖµÄÊıÁ¿ÎªÆæÊıÊ±£¬ÔòÊı×ÖÎª¸º£¬·ñÔòÎªÕı£¬
-     * ²»Á¬Ğø³öÏÖµÄ-ºÅ²»×÷Êı¡£
-     * ÀıÈç£º¡°A-1BC--12¡±£¬°üº¬Êı×ÖÎª-1ºÍ12
+     * è¦æ±‚ï¼šå¿½ç•¥å°æ•°ç‚¹,å¦‚â€œA1.3â€ï¼ŒåŒ…å«1å’Œ3
+     * å¦‚æœè´´ç´§æ•°å­—å­—ä¸²çš„å·¦ä¾§å‡ºç°-å·ï¼Œå½“è¿ç»­å‡ºç°çš„æ•°é‡ä¸ºå¥‡æ•°æ—¶ï¼Œåˆ™æ•°å­—ä¸ºè´Ÿï¼Œå¦åˆ™ä¸ºæ­£ï¼Œ
+     * ä¸è¿ç»­å‡ºç°çš„-å·ä¸ä½œæ•°ã€‚
+     * ä¾‹å¦‚ï¼šâ€œA-1BC--12â€ï¼ŒåŒ…å«æ•°å­—ä¸º-1å’Œ12
      * 
      */
     public static int numSumInStr(String str) {
         if (str == null) {
             return 0;
         }
-        boolean sign = true;// ±íÊ¾numµÄÕı¸º
+        boolean sign = true;// è¡¨ç¤ºnumçš„æ­£è´Ÿ
         int cur = 0;
         int sum = 0;
-        int num = 0;// Êı×Ö×Ó´®±íÊ¾µÄÊıÖµ
+        int num = 0;
         for (int i = 0; i < str.length(); i++) {
             cur = str.charAt(i) - '0';
             if (cur < 0 || cur > 9) {
-                sum += num;// ÔÚ·ÇÊı×ÖÊ±½øĞĞ¼ÓºÍ
-                num = 0;// num¹é0
+                sum += num;// åœ¨éæ•°å­—æ—¶è¿›è¡ŒåŠ å’Œ
+                num = 0;// numå½’0
                 if (str.charAt(i) == '-') {
-                    if (i - 1 > -1 && str.charAt(i - 1) == '-') {// ³öÏÖµÚ¶ş¸ö-ºÅ
+                    if (i - 1 > -1 && str.charAt(i - 1) == '-') {// å‡ºç°ç¬¬äºŒä¸ª-å·
                         sign = !sign;
-                    } else {// Ö»³öÏÖÁËÒ»¸ö-ºÅ£¬¸ºÊı
+                    } else {// åªå‡ºç°äº†ä¸€ä¸ª-å·ï¼Œè´Ÿæ•°
                         sign = false;
                     }
-                } else {// Ã»ÓĞ³öÏÖ-ºÅ£¬ÕıÊı
+                } else {// æ²¡æœ‰å‡ºç°-å·ï¼Œæ­£æ•°
                     sign = true;
                 }
             } else {
                 num = num * 10 + (sign ? cur : -cur);
             }
         }
-        sum += num;// ×ö×îºóÒ»´Î¼ÓºÍ£¨×Ö·û´®ÒÔÊı×Ö½áÎ²µÄÇé¿ö£©
+        sum += num;// åšæœ€åä¸€æ¬¡åŠ å’Œï¼ˆå­—ç¬¦ä¸²ä»¥æ•°å­—ç»“å°¾çš„æƒ…å†µï¼‰
         return sum;
     }
-    
+    /**
+     * ç»™å®šä¸€ä¸ªå­—ç¬¦ä¸²strå’Œä¸€ä¸ªæ•´æ•°k,å¦‚æœsträ¸­æ­£å¥½æœ‰è¿ç»­çš„kä¸ª'0'å­—ç¬¦å‡ºç°æ—¶ï¼ŒæŠŠkä¸ªè¿ç»­çš„'0'å»æ‰ï¼Œè¿”å›å¤„ç†åçš„å­—ç¬¦ä¸²ã€‚
+     * æ¯”å¦‚ï¼š
+     * str = "A00B"ï¼Œk = 2ï¼Œè¿”å›"A**B"ï¼›
+     * str = "A0000B000"ï¼Œk = 3ï¼Œè¿”å›"A0000B***";
+     */
+    public static String delKzeros(String str, int k) {
+        if (str == null || k < 1) {
+            return str;
+        }
+        char[] chars = str.toCharArray();
+        int zeroStartIndex = -1;
+        int zeroCount = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '0') {
+                zeroCount++;
+                zeroStartIndex = (zeroStartIndex == -1 ? i : zeroStartIndex);
+            } else {
+             // æ”’å¤Ÿäº†è¿ç»­çš„kä¸ª0ï¼Œä¸”ä¸‹ä¸€ä¸ªå­—ç¬¦ä¸ä¸º0ï¼Œæ»¡è¶³æ¡ä»¶ï¼Œé‚£ä¹ˆæ¶ˆç­è¿™äº›è¿ç»­0
+                if (zeroCount == k) {
+                    while (zeroCount-- > 0) {
+                        chars[zeroStartIndex++] = '*';
+                    }
+                }
+                zeroCount = 0;
+                zeroStartIndex = -1;// zeroStartIndexé‡ç½®
+            }
+        }
+        // ç”±äºåœ¨æ»¡è¶³æ¡ä»¶çš„è¿ç»­0çš„ä¸‹ä¸€ä¸ªå­—ç¬¦å¤„åšå¤„ç†ï¼Œé‚£ä¹ˆå¦‚æœæœ«å°¾æœ‰æ»¡è¶³æ¡ä»¶çš„è¿ç»­0ï¼Œ
+        // å°±ä¸ä¼šåšå¤„ç†ï¼Œå› æ­¤è¦åˆ¤æ–­æ˜¯å¦æ»¡è¶³è¿™ç§æƒ…å†µï¼ˆè·Ÿä¸Šä¸€ä¸ªé¢˜ä¸€æ ·ï¼‰
+        if (zeroCount == k) {
+            while (zeroCount-- > 0) {
+                chars[zeroStartIndex++] = '*';
+            }
+        }
+        return String.valueOf(chars);
+    }
+    /*
+     * åœ¨ä¸Šé¢çš„åŸºç¡€ä¸Šæ”¹è‰¯ï¼Œå°†*å·æŠ¹å»
+     * æ¯”å¦‚ï¼š
+     * str = "A00B"ï¼Œk = 2ï¼Œè¿”å›"AB"ï¼›
+     * str = "A0000B000"ï¼Œk = 3ï¼Œè¿”å›"A0000B";
+     * str = "A00000B00"ï¼Œk = 2ï¼Œè¿”å›"A0000B";
+     */
+    public static String delKzerosPro(String str, int k) {
+        if (str == null || k < 1) {
+            return str;
+        }
+        char[] chars = str.toCharArray();
+        int zeroStartIndex = -1;
+        int zeroCount = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '0') {
+                zeroCount++;
+                zeroStartIndex = (zeroStartIndex == -1 ? i : zeroStartIndex);
+            } else {
+                // æ”’å¤Ÿäº†è¿ç»­çš„kä¸ª0ï¼Œä¸”ä¸‹ä¸€ä¸ªå­—ç¬¦ä¸ä¸º0ï¼Œæ»¡è¶³æ¡ä»¶ï¼Œé‚£ä¹ˆæ¶ˆç­è¿™äº›è¿ç»­0
+                if (zeroCount == k) {
+                    int j = zeroStartIndex;
+                    for (; j + k < chars.length; j++) {
+                        chars[j] = chars[j + k]; 
+                     // åŸæ¥çš„ä½ç½®è®¾ç½®ä¸ºå­—ç¬¦*ï¼Œä¸ºäº†é˜²æ­¢ç»è¿‡å‰ç§»ï¼Œæ°å¥½å½¢æˆç¬¦åˆæ¡ä»¶çš„è¿ç»­0
+                        chars[j + k] = '*';
+                    }
+                    while (j < i) {// æ”¾ç½®åé¢çš„ä¸èƒ½æŠŠå‰é¢çš„å®Œå…¨è¦†ç›–
+                        chars[j++] = '*';
+                    }
+                    i = i - k;// å‹ç¼©åçš„ç´¢å¼•å€¼
+                }
+                zeroCount = 0;
+                zeroStartIndex = -1;// zeroStartIndexé‡ç½®
+            }
+        }
+        if (zeroCount == k) {
+            while (zeroCount-- > 0) {
+                chars[zeroStartIndex++] = '*';
+            }
+        }
+        // ç»Ÿè®¡æœ‰å¤šå°‘ä¸ªæ­£å¸¸å­—ç¬¦
+        int resultLen = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '*') {
+                resultLen = i;
+                break;
+            }
+        }
+        return new String(chars, 0, resultLen);
+        
+    }
 }
