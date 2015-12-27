@@ -36,7 +36,6 @@ public class MyListUtils {
         }
         System.out.println();
     }
-    
     /**
      * 删除单链表的倒数第K个结点
      */
@@ -150,6 +149,45 @@ public class MyListUtils {
         }
         slow.next = slow.next.next;
         return head;
+    }
+    /**
+     * 删除单链表 a/b 处的结点（上取整）
+     */
+    /*
+     * 首先要找到 a/b 处在哪里，然后找到它前面的结点
+     */
+    public static Node delNodeByRatio(Node head, int a, int b) {
+        if (head == null || a < 1 || a > b) {
+            return head;
+        }
+        Node curr = head;
+        int listLen = getSize(head);
+        int delIndex = (int)Math.ceil((double)a * listLen / b);// 上取整找到要删除的结点
+        // 单链表长度不为0，因此上取整不可能为0
+        if (delIndex == 1) {// 要删除的是头接点
+            return head.next;
+        }
+        // 找到要删除结点的前一个结点
+        for (int i = 1; i < delIndex - 1 ; i++) {
+            curr = curr.next;
+        }
+        curr.next = curr.next.next;
+        return head;
+    }
+    /**
+     * 获取单链表的长度
+     */
+    public static int getSize(Node head) {
+        if (head == null) {
+            return 0;
+        }
+        Node curr = head;
+        int length = 0;
+        while (curr != null) {
+            length++;
+            curr = curr.next;
+        }
+        return length;
     }
     
     
