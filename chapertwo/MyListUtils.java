@@ -235,6 +235,56 @@ public class MyListUtils {
         }
         return prev;
     }
+    /**
+     * 反转部分单链表,给定两个整数from和to，分别表示要反转链表部分的开始和结束。
+     * 若链表长度为n，则时间复杂度为O(n),额外空间复杂度要求为O(1)
+     * 举个栗子：
+     * 单链表1->2->3->4->null
+     * from=2,to=4
+     * 输出 1->4->3->2->null
+     * from=1,to=4
+     * 输出 4->3->2->1->null
+     */
+    /*
+     * 可以利用dummy结点来避开需要反转首元素的操作，
+     * 删除和插入时，用得较多。
+     * 另外，也可以讨论from是否为1，即是否从首结点开始反转
+     * 思路：
+     * 找到要反转部分的前一个和后一个结点，对这一部分进行反转，
+     * 然后再接入到原单链表中。
+     */
+    public static Node reversePartList(Node head, int from, int to) {
+        int len = -1;// 注意初始值
+        Node preFrom = null;// 第from个结点的前一个结点
+        Node postTo = null;// 第to个结点的后一个结点
+        Node dummy = new Node();// 设置dummy结点
+        dummy.next = head;
+        Node curr = dummy;// 处理的结点
+        while (curr != null) {
+            len++;
+            preFrom = len == (from - 1) ? curr : preFrom;
+            postTo = len == (to + 1) ? curr : postTo;
+            curr = curr.next;
+        }// 循环结束len等于链表的长度
+        // 合法性检查
+        if (head == null || from < 1 || to > len) {
+            return head;
+        }
+        Node prev = preFrom.next;
+        curr = prev.next;
+      //(关键)反转部分的第一个结点反转后变成这一部分的最后一个结点，然后下一个结点就是postTo
+        prev.next = postTo;
+        Node next = null;
+        while (curr != postTo) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        //(关键)反转处理的prev指向了反转部分的第一个结点，它的前一个结点是preFrom
+        preFrom.next = prev;
+        return dummy.next;
+    }
     
     
 }
