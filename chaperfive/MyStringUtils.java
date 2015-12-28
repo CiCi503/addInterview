@@ -1,5 +1,6 @@
 package chaperfive;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MyStringUtils {
@@ -171,6 +172,16 @@ public class MyStringUtils {
             }
         }
         return new String(chars, 0, resultLen);
-        
     }
+    
+   /**
+    *  判断是否为旋转词
+    */
+   public static boolean isRotation(String a, String b) {
+    if (a == null || b== null || a.length() != b.length()) {
+        return false;
+    }
+    String con = a + a;
+    return con.contains(b);// 字符串匹配问题KMP算法
+}
 }
