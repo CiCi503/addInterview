@@ -1,6 +1,5 @@
 package chaperfive;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MyStringUtils {
@@ -8,8 +7,7 @@ public class MyStringUtils {
      * 判断两个字符串是否为变形词
      */
     /*
-     * 方法1：将字符串转换成数组，若是变形词，那么排序后的两个数组元素顺序是一致的
-     * 这种做法效率较低，但是比较直观
+     * 方法1：将字符串转换成数组，若是变形词，那么排序后的两个数组元素顺序是一致的 这种做法效率较低，但是比较直观
      */
     public static boolean isDeformation(String str1, String str2) {
         if (str1 == null || str2 == null || str1.length() != str2.length()) {
@@ -25,9 +23,10 @@ public class MyStringUtils {
             }
         }
         // 或者将数组重新转为字符串就行判断
-//        return new String(arr1).equals(new String(arr2));
+        // return new String(arr1).equals(new String(arr2));
         return true;
     }
+
     /*
      * 方法2：假设字符串中字符都是ASCII字符，那么使用一个长度为256的数组来记录每个字符在字符串中出现的长度
      */
@@ -46,14 +45,13 @@ public class MyStringUtils {
         }
         return true;
     }
-    
+
     /**
      * 给定一个字符串str,求其中全部数字字串所代表的数字之和
      * 
-     * 要求：忽略小数点,如“A1.3”，包含1和3
-     * 如果贴紧数字字串的左侧出现-号，当连续出现的数量为奇数时，则数字为负，否则为正，
-     * 不连续出现的-号不作数。
-     * 例如：“A-1BC--12”，包含数字为-1和12
+     * 要求：忽略小数点,如“A1.3”，包含1和3 如果贴紧数字字串的左侧出现-号，
+     * 当连续出现的数量为奇数时，则数字为负，否则为正，
+     * 不连续出现的-号不作数。 例如：“A-1BC--12”，包含数字为-1和12
      * 
      */
     public static int numSumInStr(String str) {
@@ -85,11 +83,11 @@ public class MyStringUtils {
         sum += num;// 做最后一次加和（字符串以数字结尾的情况）
         return sum;
     }
+
     /**
-     * 给定一个字符串str和一个整数k,如果str中正好有连续的k个'0'字符出现时，把k个连续的'0'去掉，返回处理后的字符串。
-     * 比如：
-     * str = "A00B"，k = 2，返回"A**B"；
-     * str = "A0000B000"，k = 3，返回"A0000B***";
+     * 给定一个字符串str和一个整数k,如果str中正好有连续的k个'0'字符出现时，
+     * 把k个连续的'0'去掉，返回处理后的字符串。 
+     * 比如： str ="A00B"，k = 2，返回"A**B"； str = "A0000B000"，k = 3，返回"A0000B***";
      */
     public static String delKzeros(String str, int k) {
         if (str == null || k < 1) {
@@ -103,7 +101,7 @@ public class MyStringUtils {
                 zeroCount++;
                 zeroStartIndex = (zeroStartIndex == -1 ? i : zeroStartIndex);
             } else {
-             // 攒够了连续的k个0，且下一个字符不为0，满足条件，那么消灭这些连续0
+                // 攒够了连续的k个0，且下一个字符不为0，满足条件，那么消灭这些连续0
                 if (zeroCount == k) {
                     while (zeroCount-- > 0) {
                         chars[zeroStartIndex++] = '*';
@@ -122,12 +120,10 @@ public class MyStringUtils {
         }
         return String.valueOf(chars);
     }
+
     /*
-     * 在上面的基础上改良，将*号抹去
-     * 比如：
-     * str = "A00B"，k = 2，返回"AB"；
-     * str = "A0000B000"，k = 3，返回"A0000B";
-     * str = "A00000B00"，k = 2，返回"A0000B";
+     * 在上面的基础上改良，将*号抹去 比如： str = "A00B"，k = 2，返回"AB"； str = "A0000B000"，k =
+     * 3，返回"A0000B"; str = "A00000B00"，k = 2，返回"A0000B";
      */
     public static String delKzerosPro(String str, int k) {
         if (str == null || k < 1) {
@@ -145,8 +141,8 @@ public class MyStringUtils {
                 if (zeroCount == k) {
                     int j = zeroStartIndex;
                     for (; j + k < chars.length; j++) {
-                        chars[j] = chars[j + k]; 
-                     // 原来的位置设置为字符*，为了防止经过前移，恰好形成符合条件的连续0
+                        chars[j] = chars[j + k];
+                        // 原来的位置设置为字符*，为了防止经过前移，恰好形成符合条件的连续0
                         chars[j + k] = '*';
                     }
                     while (j < i) {// 放置后面的不能把前面的完全覆盖
@@ -173,15 +169,70 @@ public class MyStringUtils {
         }
         return new String(chars, 0, resultLen);
     }
-    
-   /**
-    *  判断是否为旋转词
-    */
-   public static boolean isRotation(String a, String b) {
-    if (a == null || b== null || a.length() != b.length()) {
-        return false;
+
+    /**
+     * 判断是否为旋转词
+     */
+    public static boolean isRotation(String a, String b) {
+        if (a == null || b == null || a.length() != b.length()) {
+            return false;
+        }
+        String con = a + a;
+        return con.contains(b);// 涉及到字符串匹配问题KMP算法
     }
-    String con = a + a;
-    return con.contains(b);// 字符串匹配问题KMP算法
-}
+    
+    /**
+     * 将字符串str中含有的from字符串全部替换成to字符串，若没有from字符串则输出原字符串，
+     * 要求str中出现连续的from时，全部替换成一个to字符串。
+     * 举个例子：
+     * str="123abab" ,from="ab", to="x",输出为123x
+     * 
+     */
+    public static String replace(String str, String from, String to) {
+        if (str == null || str.isEmpty() || from == null || from.isEmpty()) {
+            return null;
+        }
+        StringBuilder strsb = new StringBuilder(str);
+        int matchLen = from.length();
+        int matchIndex = 0;
+        StringBuilder curr = new StringBuilder();// 存储被*号分隔开的各字符串
+        StringBuilder rest = new StringBuilder();// 存储结果
+        for (int i = 0; i < strsb.length(); i++) {
+            if (strsb.charAt(i) == from.charAt(matchIndex)) {
+                matchIndex++;
+                if (matchIndex == matchLen) {
+                    // 将str中包含的from串全变成*号
+                    clean(strsb, i, matchLen);
+                    matchIndex = 0;
+                }
+            } else {
+                matchIndex = 0;
+            }
+        }
+        
+        for (int i = 0; i < strsb.length(); i++) {
+            if (strsb.charAt(i) != '*') {
+                curr.append(strsb.charAt(i));
+            }
+            // 在不满足条件时进行操作，循环结束以后要有一个判断添加的操作
+            if (strsb.charAt(i) == '*' && (i == 0 || strsb.charAt(i - 1) != '*')) {
+                rest.append(curr).append(to);
+                curr.delete(0, curr.length());
+            }
+        }
+        if (curr.length() != 0) {
+            rest.append(curr);
+        }
+        return rest.toString();
+        
+    }
+
+    private static void clean(StringBuilder strsb, int end, int matchLen) {
+        for (int i = matchLen; i > 0 ; i--) {
+            strsb.setCharAt(end, '*');
+            end--;
+        }
+    }
+    
+    
 }
