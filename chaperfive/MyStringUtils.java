@@ -234,5 +234,90 @@ public class MyStringUtils {
         }
     }
     
+    /**
+     * 题目：字符串的统计字符串
+     * 给定一个字符串str,返回str的统计字符串。
+     * 举个栗子：
+     * aaabbadddffc 的统计字符串为 a_3_b_2_a_1_d_3_f_2_c_1
+     */
+    public static String statisticStr(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        int count = 1;
+        StringBuilder result = new StringBuilder();
+        char[] chas = str.toCharArray();
+        result.append(chas[0]).append('_');
+        for (int i = 1; i < str.length(); i++) {
+            if (chas[i] == chas[i - 1]) {
+                count++;
+            } else {// 在不符合条件时往结果中添加新的字符，因此循环结束之后要加上最后一个字符的统计个数
+                result.append(count).append('_').append(chas[i]).append('_');
+                count = 1;
+            }
+        }
+        result.append(count);
+        return result.toString();
+    }
+    
+    /**
+     * 题目：给定一个字符串的统计字符串cstr（上题），再给定一个整数index，返回cstr所代表的原始字符串上的
+     * 第index个字符。
+     * 举个栗子：
+     * “a_1_b_100”，给定index=50，那么原始字符串中第50个字符应该是'b'
+     */
+    public static char getCharAt(String cstr, int index) {
+        if (cstr == null || cstr.isEmpty()) {
+            return 0;
+        }
+        char curr = 0;
+        int sum = 0;
+        boolean isAlpha = true;
+        int num = 0;// 字母重复次数
+        char[] chas = cstr.toCharArray();
+        
+        for (int i = 0; i < chas.length; i++) {
+            if (chas[i] == '_') {
+                isAlpha = !isAlpha;
+            } else if (isAlpha) {// 处理字母
+                sum += num;
+                if (sum > index) {
+                    return curr;
+                }
+                num = 0;// 次数清零
+                curr = chas[i];
+            } else { // 处理数字
+                num = num * 10 + chas[i] - '0';// 将字符串中字母出现的次数换算成数字
+            }
+        }
+        return sum + num > index ? curr : 0;// 统计最后一次,不满足条件就返回0
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
