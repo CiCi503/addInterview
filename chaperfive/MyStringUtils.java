@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class MyStringUtils {
     /**
-     * 判断两个字符串是否为变形词
+     * 题目：判断两个字符串是否为变形词
      */
     /*
      * 方法1：将字符串转换成数组，若是变形词，那么排序后的两个数组元素顺序是一致的 这种做法效率较低，但是比较直观
@@ -47,7 +47,7 @@ public class MyStringUtils {
     }
 
     /**
-     * 给定一个字符串str,求其中全部数字字串所代表的数字之和
+     * 题目：给定一个字符串str,求其中全部数字字串所代表的数字之和
      * 
      * 要求：忽略小数点,如“A1.3”，包含1和3 如果贴紧数字字串的左侧出现-号，
      * 当连续出现的数量为奇数时，则数字为负，否则为正，
@@ -85,7 +85,7 @@ public class MyStringUtils {
     }
 
     /**
-     * 给定一个字符串str和一个整数k,如果str中正好有连续的k个'0'字符出现时，
+     * 题目：给定一个字符串str和一个整数k,如果str中正好有连续的k个'0'字符出现时，
      * 把k个连续的'0'去掉，返回处理后的字符串。 
      * 比如： str ="A00B"，k = 2，返回"A**B"； str = "A0000B000"，k = 3，返回"A0000B***";
      */
@@ -171,7 +171,7 @@ public class MyStringUtils {
     }
 
     /**
-     * 判断是否为旋转词
+     * 题目：判断是否为旋转词
      */
     public static boolean isRotation(String a, String b) {
         if (a == null || b == null || a.length() != b.length()) {
@@ -182,7 +182,7 @@ public class MyStringUtils {
     }
     
     /**
-     * 将字符串str中含有的from字符串全部替换成to字符串，若没有from字符串则输出原字符串，
+     * 题目：将字符串str中含有的from字符串全部替换成to字符串，若没有from字符串则输出原字符串，
      * 要求str中出现连续的from时，全部替换成一个to字符串。
      * 举个例子：
      * str="123abab" ,from="ab", to="x",输出为123x
@@ -292,26 +292,6 @@ public class MyStringUtils {
         }
         return sum + num > index ? curr : 0;// 统计最后一次,不满足条件就返回0
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
