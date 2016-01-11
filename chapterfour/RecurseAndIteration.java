@@ -43,6 +43,7 @@ public class RecurseAndIteration {
     /*
      * 解法3：基于矩阵乘法
      * 
+     * 时间复杂度为O(lgn)，但不常用
      */
     
     // 基准数组
@@ -86,7 +87,30 @@ public class RecurseAndIteration {
             result = matrix[0][0];
         }
         return result;
-        
+    }
+    
+    /**
+     * 青蛙跳台阶问题：一直青蛙一次可以跳1个台阶，也可以跳2个，当台阶有n个阶数时，一共有多少种跳法？
+     * 问题归结为fibonacci数列，只是初始值有点不同，n=1时，只有1种跳法，n=2时，有2种。
+     */
+    public static long getMethodsCount(int stepNum) {
+        long result = 0;
+        long pre = 1;
+        long suf = 2;
+        if (stepNum <= 0) {
+            throw new RuntimeException("The number of step must be a positive one!");
+        } else if (stepNum == 1) {
+            result = 1;
+        } else if (stepNum == 2) {
+            result = 2;
+        } else {
+            for (int i = 3; i <= stepNum; i++) {
+                result = pre + suf;
+                pre = suf;
+                suf = result;
+            }
+        }
+        return result;
     }
     
 }
