@@ -1,5 +1,7 @@
 package chapterfour;
 
+import java.util.BitSet;
+
 public class Other {
     
     /**
@@ -65,10 +67,11 @@ public class Other {
      * 所以本题是个大数问题。
      * 最常用的也是最容易的方法是使用字符串或者数组表示大数
      * 
+     * 解决方法：在字符串解决大数问题
      * 方法1：
      */
     public static void print1ToMaxOfDigits(int n) {
-        if (n <= 0) {
+        if (n < 1) {
             return;
         }
         char[] numArr = new char[n];
@@ -92,7 +95,9 @@ public class Other {
                 System.out.print((char)numArr[i]);
             }
         }
-        System.out.println();
+        if (!isBegin) {// 如果这个数不为0，那么打印完成后进行换行
+            System.out.println();
+        }
     }
     // 做数字的递增
     private static boolean increament(char[] numArr) {
@@ -115,7 +120,6 @@ public class Other {
                 }
             } else {
                 numArr[i] = (char)('0' + (char)digitSum);
-                break;
             }
         }
         return isOverFlow;
@@ -126,26 +130,34 @@ public class Other {
      * 那么这个问题实际上就是n个从0到9的全排列。
      */
     public static void print1ToMaxOfDigits2(int n) {
-        if (n <= 0) {
+        if (n < 1) {
             return;
         }
         char[] numArr = new char[n];
-        for (int i = 0; i < 10; i++) {
-            numArr[0] = (char) ((char)i + '0');
-            print1ToMaxOfDigits2Recurse(numArr, n, 0);
-        }
+        print1ToMaxOfDigits2Recurse(numArr, 0);
     }
 
-    private static void print1ToMaxOfDigits2Recurse(char[] numArr, int len,
-            int index) {
-        if (index == len - 1) {// 递归出口
+    private static void print1ToMaxOfDigits2Recurse(char[] numArr,  int index) {
+        if (index == numArr.length) {// 递归出口
             printNumer(numArr);
-            return;
+        } else {
+            for (int j = 0; j < 10; j++) {
+                numArr[index] = (char) ((char)j + '0');// 设置后一位
+                print1ToMaxOfDigits2Recurse(numArr, index + 1);
+            }
         }
-        for (int j = 0; j < 10; j++) {
-            numArr[index + 1] = (char) ((char)j + '0');// 设置后一位
-            print1ToMaxOfDigits2Recurse(numArr, len, index + 1);
-        }
+      
     }
+    
+    /*
+     * 思考：一个char类型变量占2个字符，也就是16bit，可以表示0~65535，
+     * 但现在只需要0-9这10个数字，这显然造成了空间的浪费。
+     */
+    // TODO optimize the memory
+    public static void print1ToMaxOfDigits3(int n) {
+
+    }
+    
+
     
 }
