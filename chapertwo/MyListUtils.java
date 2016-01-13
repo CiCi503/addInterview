@@ -10,10 +10,10 @@ public class MyListUtils {
             return;
         }
         while (head != null) {
-            System.out.print(head.value + " ");
+            System.out.print(head.value + "->");
             head = head.next;
         }
-        System.out.println();
+        System.out.println("null");
     }
 
     /**
@@ -33,7 +33,7 @@ public class MyListUtils {
     }
 
     /**
-     * 两个有序单链表，找出它们结点value相同的结点
+     * 题目：两个有序单链表，找出它们结点value相同的结点
      */
     public static void printCommPart(Node head1, Node head2) {
         if (head1 == null || head2 == null) {
@@ -55,7 +55,7 @@ public class MyListUtils {
     }
 
     /**
-     * 删除单链表的倒数第K个结点
+     * 题目：删除单链表的倒数第K个结点
      */
     /*
      * 倒数第k个结点是正数第n-k+1个结点（序号为n-k），实际要找的是它（要删除的结点）的前一个结点 
@@ -113,9 +113,43 @@ public class MyListUtils {
         slow.next = slow.next.next;
         return head;
     }
+    
+    /**
+     * 题目：在O(1)时间复杂度内删除指定结点
+     */
+    /*
+     * 考虑要删除的结点是尾结点？头部结点？单结点？
+     * 要删除的结点是尾结点时，必须从头开始寻找，时间复杂度O(n)
+     * 平均时间复杂度为[O(1)*(n-1)+O(n)]/n,结果是O(1)
+     * 注意：本解法并没有考虑要删除的结点不在给定的单链表中，这需要O(n)的时间复杂度来确认！
+     */
+    public static Node delSpecificNode(Node head, Node toBeDeleted) {
+        if (head == null || toBeDeleted == null) {
+            return head;
+        }
+     // 要删除的结点恰好是head结点，
+        // 2种情况：①单结点情形，要删除的结点恰好就是该结点
+        //          ②多结点情形，要删除的恰好是头部结点。
+        if (head == toBeDeleted) {
+            return head.next;
+        } 
+        Node curr = head;
+        // 以下都是多结点的情况
+        if (toBeDeleted.next == null) {// 尾部结点
+            while (curr.next != toBeDeleted) {
+                curr = curr.next;
+            }
+            curr.next = null;
+        }  else {
+            toBeDeleted.value = toBeDeleted.next.value;
+            toBeDeleted.next = toBeDeleted.next.next;
+        }
+        return head;
+        
+    }
 
     /**
-     * 删除双链表的倒数第K个结点
+     * 题目：删除双链表的倒数第K个结点
      */
     /*
      * 与上面大同小异，这时要考虑前后两个指向 头结点与尾节点是重要的结点
@@ -148,7 +182,7 @@ public class MyListUtils {
     }
 
     /**
-     * 删除单链表的中间结点
+     * 题目：删除单链表的中间结点
      */
     /*
      * 单链表删除某个结点最重要的就是要找到要删除结点的上一个结点
@@ -172,7 +206,7 @@ public class MyListUtils {
     }
 
     /**
-     * 删除单链表 a/b 处的结点（上取整）
+     * 题目：删除单链表 a/b 处的结点（上取整）
      */
     /*
      * 首先要找到 a/b 处在哪里，然后找到它前面的结点
@@ -197,7 +231,7 @@ public class MyListUtils {
     }
 
     /**
-     * 反转单链表
+     * 题目：反转单链表
      * 要求：若链表长度为n，则时间复杂度为O(n)，空间复杂度为O(1)
      */
     public static Node reversList(Node head) {
@@ -216,7 +250,7 @@ public class MyListUtils {
         return prev;
     }
     /**
-     * 反转双向链表
+     * 题目：反转双向链表
      */
     /* 与反转单向链表的操作基本相同 */
     public static DoubleNode reverseDoubleList(DoubleNode head) {
@@ -236,6 +270,7 @@ public class MyListUtils {
         return prev;
     }
     /**
+     * 题目：
      * 反转部分单链表,给定两个整数from和to，分别表示要反转链表部分的开始和结束。
      * 若链表长度为n，则时间复杂度为O(n),额外空间复杂度要求为O(1)
      * 举个栗子：
