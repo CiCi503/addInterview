@@ -50,5 +50,42 @@ public class MyArrayUtils {
         return result;
     }
     
+    /**
+     * 题目：输入一个整数数组，实现一个方法来调整数组中的元素，
+     *       使得奇数位于前半部分，偶数位于后半部分。
+     */
+    /*
+     * 从头部和尾部同时相向遍历数组，这个思想也应用在快排的partition方法
+     */
+    public static void reorderOddEven(int[] arr, int len) {
+        if (arr == null || len == 0) {
+            return;
+        }
+        int prev = 0;
+        int post = len - 1;
+        while (prev < post) {
+         // prev < post限制，当数组中元素全部是奇数时，prev的上限是post
+            while (prev < post && (arr[prev] & 0x1) != 0) {
+                prev++;
+            }
+         // prev < post限制，当数组中元素全部是偶数时，post的下限是prev
+            while (prev < post && (arr[post] & 0x1) == 0) {
+               post--; 
+            }
+            if (prev < post) {
+                swap(arr, prev, post);
+                prev++;
+                post--;
+            }
+        }
+    }
+    private static void swap(int[] arr, int prev, int post) {
+        int temp = arr[prev];
+        arr[prev] = arr[post];
+        arr[post] = temp;
+    }
+    
+    
+    
     
 }
