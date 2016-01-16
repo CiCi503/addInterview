@@ -54,19 +54,24 @@ public class MyListUtils {
         System.out.println();
     }
 
+    /*******************删除单链表中特定结点的关键是找到它前面的那个结点***********************************/
     /**
      * 题目：删除单链表的倒数第K个结点
      */
     /*
-     * 倒数第k个结点是正数第n-k+1个结点（序号为n-k），实际要找的是它（要删除的结点）的前一个结点 
+     * 倒数第k个结点是正数第n-k+1个结点，实际要找的是它（要删除的结点）的前一个结点 
      * 一定要注意序号 
-     * 方法1：
+     * 
+     * 方法1：(遍历两遍单链表)
      * 遍历单链表，每经过一个结点，k减去1，那么遍历到单链表末尾时，
      * k可能有三种情况： 
      * k=0,说明单链表的头结点就是要删除的结点
      * k>0,k比整个单链表的长度还要大，参数不合理，返回head就好了
      * k<0,参数合理，此时的k等于k-n,那么再次从头开始遍历，每经过一个结点时，k加上1， 
      * 当k=0对应的结点就是要删除的结点
+     * 
+     * 遍历两遍单链表的话，还有一种方法，既然已经遍历完了单链表，那么一定知道了长度n，
+     * 再遍历一遍，找到第n-k个结点。
      */
     public static Node delKthNode(Node head, int k) {
         if (head == null || k < 1) {// 空链表或者k不合理
@@ -92,7 +97,7 @@ public class MyListUtils {
     }
 
     /*
-     * 方法2 使用快慢指针
+     * 方法2 使用快慢指针（遍历一遍单链表）
      */
     public static Node delKthNode2(Node head, int k) {
         if (head == null || k < 1) {// 空链表或者k不合理
@@ -101,7 +106,7 @@ public class MyListUtils {
         Node fast = head;
         Node slow = head;
         for (int i = 0; i < k; i++) {// 提前走k步
-            if (fast == null) {
+            if (fast == null) {// 要操作的单链表的长度不够
                 return head;
             }
             fast = fast.next;
@@ -294,19 +299,21 @@ public class MyListUtils {
         Node postTo = null;// 第to个结点的后一个结点
         Node dummy = new Node();// 设置dummy结点
         dummy.next = head;
-        Node curr = dummy;// 处理的结点
-        while (curr != null) {
+        Node curr = dummy;
+        while (curr != null) {// 首先遍历一遍单链表，找到preFrom结点和postTo结点
             len++;
             preFrom = len == (from - 1) ? curr : preFrom;
             postTo = len == (to + 1) ? curr : postTo;
             curr = curr.next;
         }// 循环结束len等于链表的长度
+        
         // 合法性检查
         if (head == null || from < 1 || to > len) {
             return head;
         }
         Node prev = preFrom.next;
         curr = prev.next;
+        
       //(关键)反转部分的第一个结点反转后变成这一部分的最后一个结点，然后下一个结点就是postTo
         prev.next = postTo;
         Node next = null;
@@ -321,5 +328,32 @@ public class MyListUtils {
         return dummy.next;
     }
     
+    /**
+     * 题目：输入两个递增排序的单链表，合并这两个单链表，并使新链表中的结点仍然按递增排序。
+     */
+    /*
+     * 可以使用递归解决这个问题，
+     * 测试特殊情况：
+     * ①其中一个单链表为null，或者两个都是
+     * ②单链表中有值相等的结点
+     * 
+     */
+    public static Node mergeSortedList(Node head1, Node head2) {
+        if (head1 == null) {
+            return head2;
+        }
+        if (head2 == null) {
+            return head1;
+        }
+        Node mergedHead = null;
+        if (head1.value < head2.value) {
+            mergedHead = head1;
+            mergedHead.next = mergeSortedList(head1.next, head2);
+        } else {
+            mergedHead = head2;
+            mergedHead.next = mergeSortedList(head1, head2.next);
+        }
+        return mergedHead;
+    }
     
 }
