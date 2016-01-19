@@ -332,13 +332,14 @@ public class MyListUtils {
      * 题目：输入两个递增排序的单链表，合并这两个单链表，并使新链表中的结点仍然按递增排序。
      */
     /*
+     * 解法1：递归法
      * 可以使用递归解决这个问题，
      * 测试特殊情况：
      * ①其中一个单链表为null，或者两个都是
      * ②单链表中有值相等的结点
      * 
      */
-    public static Node mergeSortedList(Node head1, Node head2) {
+    public static Node mergeSortedListRecursion(Node head1, Node head2) {
         if (head1 == null) {
             return head2;
         }
@@ -346,14 +347,44 @@ public class MyListUtils {
             return head1;
         }
         Node mergedHead = null;
-        if (head1.value < head2.value) {
+        if (head1.value <= head2.value) {
             mergedHead = head1;
-            mergedHead.next = mergeSortedList(head1.next, head2);
+            mergedHead.next = mergeSortedListRecursion(head1.next, head2);
         } else {
             mergedHead = head2;
-            mergedHead.next = mergeSortedList(head1, head2.next);
+            mergedHead.next = mergeSortedListRecursion(head1, head2.next);
         }
         return mergedHead;
+    }
+    
+    /*
+     * 解法2：循环迭代法
+     */
+    public static Node mergeSortedListIter(Node head1, Node head2) {
+        if (head1 == null || head2 == null) {
+            return head1 != null ? head1 : head2; 
+        }
+        Node mergedHead = head1.value <= head2.value ? head1 : head2;
+        Node curr1 = mergedHead == head1 ? head1 : head2;// curr1指向包含合并结点头部的那条链
+        Node curr2 = mergedHead == head1 ? head2 : head1;
+        Node prev = null;
+        Node next = null;
+        while (curr1 != null && curr2 != null) {
+            if (curr1.value <= curr2.value) {// 两个判断可以都是<=，但是不可以都是<
+                prev = curr1;
+                curr1 = curr1.next;
+
+            } else {
+                next = curr2.next;
+                prev.next = curr2;
+                curr2.next = curr1;
+                prev = curr2;
+                curr2 = next;
+
+            }
+       }
+       prev.next = curr1 != null ? curr1 : curr2;
+       return mergedHead;
     }
     
 }
