@@ -433,4 +433,57 @@ public class MyTreeUtils {
         return isPossible;
      }
 
+    /**
+     * 题目：输入一个整数数组，判断该数组是否为某二叉搜索树的后序遍历结果
+     * 假设输入的数组中没有相同的数字。
+     * 
+     * @param sequence  待判断的序列
+     * @param start  数列开始的索引
+     * @param end  数列结束的索引
+     * @return  输入的序列是否为搜索二叉树的一个后序遍历数列
+     */
+    /*
+     * 二叉搜索树(二叉查找树，二叉排序树)：它或者是一棵空树，或者是具有下列性质的二叉树： 
+     * 若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值;
+     * 若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值; 
+     * 它的左、右子树也分别为二叉排序树。
+     */
+    public static boolean verifySequenceBST(int[] sequence, int start, int end) {
+        if (sequence == null) {
+            return true;
+        }
+        if (start < 0 || end >= sequence.length) {
+            throw new RuntimeException("Valid param range: start>=0 & end < sequence.length, Please check it!");
+        }
+     // 从后序遍历的结果来看，两个元素总是可以组成BST
+        // 加上一个判断，可以省去几次递归，当然也可以不要，
+        // 但是这个判断要在判断参数合法化之后，否则出现-4，-3这样的参数就可能出现误判。
+        if (end - start <= 2) {
+            return true;
+        }
+        int root = sequence[end];// 找到树的根节点
+        int i = start;
+        for (; i < end; i++) {// 左子树结点的遍历结束后的i指向了右子树的第一个结点
+            if (sequence[i] > root) {
+                break;
+            }
+        }
+        int j = i;
+        for (; j < end; j++) {// 右子树结点的遍历，除了最后的根节点
+            if (sequence[j] < root) {
+                return false;
+            }
+        }
+     // left和right的初始值设置为true，是考虑到只有一个元素时，应该返回true，因为它是最简单的二叉搜索树
+        boolean left = true;
+        if (start < i) {// 递归左子树结点
+            left = verifySequenceBST(sequence, start, i - 1);
+        }
+        boolean right = true;
+        if (i < end) {// 递归右子树结点
+            right = verifySequenceBST(sequence, i, end - 1);
+        }
+        return left & right;
+        
+    }
 }
