@@ -1,8 +1,16 @@
 package chapterfour;
 
-import java.util.BitSet;
 
 public class Other {
+    
+    public static void printMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
     
     /**
      * 题目：实现函数doublePower(double base, int exponent)，求base的exponent次方，
@@ -156,6 +164,100 @@ public class Other {
     // TODO optimize the memory
     public static void print1ToMaxOfDigits3(int n) {
 
+    }
+    
+    
+    /**
+     * 题目：顺时针打印矩阵，即回字打印矩阵
+     */
+    /*
+     * 思路：分圈处理（注意边界点）
+     */
+    public static void printMatrixClockwisely(int[][] matrix) {
+        // 定义4个指针，左上角/右下角元素各需要2个指针来定位
+        int upCol = 0;
+        int upRow = 0;
+        int downCol = matrix[0].length - 1;
+        int downRow = matrix.length - 1;
+        while (upCol < downCol) {
+            // 打印完一条边之后，左上角和右下角的指针分别沿着对角线方向移动一个单位
+            circlePrintMatrixEdge(matrix, upCol++, upRow++, downCol--, downRow--);
+        }
+    }
+
+    // 打印矩阵的一条边
+    private static void circlePrintMatrixEdge(int[][] matrix, int upCol, int upRow, int downCol, int downRow) {
+        if (matrix == null) {
+            return;
+        }
+        /*顺时针*/
+        // 上
+        for (int i = upCol; i < downCol ; i++) {
+            System.out.print(matrix[upRow][i] + " ");
+        }
+        // 右
+        for (int i = upRow; i < downRow; i++) {
+            System.out.print(matrix[i][downCol] + " ");
+        }
+        // 下
+        for (int i = downCol; i > upCol; i--) {
+            System.out.print(matrix[downRow][i] + " ");
+        }
+        // 左
+        for (int i = downRow; i > upRow; i--) {
+            System.out.print(matrix[i][upCol] + " ");
+        }
+        
+        /*逆时针 antiClockwisely*/
+        /*
+        // 左
+        for (int i = upRow; i < downRow; i++) {
+           System.out.print(matrix[i][upCol] + " "); 
+        }
+        // 下
+        for (int i = upCol; i < downCol; i++) {
+            System.out.print(matrix[downRow][i] + " ");
+        }
+        // 右
+        for (int i = downRow; i > upRow; i--) {
+            System.out.print(matrix[i][downCol] + " ");
+        }
+        // 上
+        for (int i = downCol; i > upCol; i--) {
+            System.out.print(matrix[upRow][i] + " ");
+        }
+        */
+    }
+    /**
+     * 题目：顺时针旋转矩阵
+     */
+    /*
+     * 分圈的思路，跟上面一样
+     */
+    public static void rotateMatrixClockwisely(int[][] matrix) {
+        int upCol = 0;
+        int upRow = 0;
+        int downCol = matrix[0].length - 1;
+        int downRow = matrix.length - 1;
+        while (upCol < downCol) {
+            rotatePrintMatrixEdge(matrix, upCol++, upRow++, downCol--, downRow--);
+        }
+    }
+
+    private static void rotatePrintMatrixEdge(int[][] matrix, int upCol, int upRow, int downCol, int downRow) {
+        int rotateTimes = downCol - upCol;
+        int temp;
+        for (int i = 0; i < rotateTimes; i++) {
+            temp = matrix[upRow][upCol + i];
+            // 左→上
+            matrix[upRow][upCol + i] = matrix[downRow - i][upCol];
+            // 上→右
+            matrix[downRow - i][upCol] = matrix[downRow][downCol - i];
+            // 右→下
+            matrix[downRow][downCol - i] = matrix[upRow + i][downCol];
+            // 下→左
+            matrix[upRow + i][downCol] =  temp;
+        }
     }
     
 
