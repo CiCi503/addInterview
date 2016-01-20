@@ -12,9 +12,10 @@ public class BitUtils {
     public static int getCountOfOne(int num) {
         int count = 0;
         while (num != 0 ) {
-            if ((num & 1) == 1) {
-                count++;
-            }
+//            if ((num & 1) == 1) {
+//                count++;
+//            }
+            count += (num & 0x01);
             num >>>= 1;
         }
         return count;
