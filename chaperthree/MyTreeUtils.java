@@ -288,8 +288,7 @@ public class MyTreeUtils {
      * @return
      */
     /*
-     * 并不是所有的二叉树都可以根据前序和后序进行重建，有些二叉树的前序和后序结果是相同的， 
-     * 比如： 2 / 1 该树的前后序遍历结果都是 [1, 2]
+     * 并不是所有的二叉树都可以根据前序和后序进行重建，有些二叉树的前序和后序结果是相同的， 比如： 2 / 1 该树的前后序遍历结果都是 [1, 2]
      * 若一二叉树除了左右节点之外，其他所有的结点都有左右孩子，那么可以根据前后序进行重建.
      */
     public static TreeNode rebuildTreePrePost(int[] preorder, int[] postorder) {
@@ -360,19 +359,78 @@ public class MyTreeUtils {
     /*
      * 实际上就是前序遍历这棵树，没有遍历到子节点就交换两个孩子结点的位置
      */
-    public static void mirrorRecursively(TreeNode head) {
-        if (head == null) {
+    public static void mirrorRecursively(TreeNode treeRoot) {
+        if (treeRoot == null) {
             return;
         }
-        TreeNode temp = head.left;
-        head.left = head.right;
-        head.right = temp;
-        if (head.left != null) {// 左孩子不是叶子结点
-            mirrorRecursively(head.left);
+        TreeNode temp = treeRoot.left;
+        treeRoot.left = treeRoot.right;
+        treeRoot.right = temp;
+        if (treeRoot.left != null) {// 左孩子不是叶子结点
+            mirrorRecursively(treeRoot.left);
         }
-        if (head.right != null) {// 右孩子不是叶子结点
-            mirrorRecursively(head.right);
+        if (treeRoot.right != null) {// 右孩子不是叶子结点
+            mirrorRecursively(treeRoot.right);
         }
     }
+
+    /**
+     * 题目：从上往下打印二叉树的每个结点，同一层的结点按照从左到右的顺序打印
+     */
+    public static void printFromTopToBottom(TreeNode treeRoot) {
+        if (treeRoot == null) {
+            return;
+        }
+        LinkedList<TreeNode> nodes = new LinkedList<>();// 要求可以FIFO的容器
+        nodes.offer(treeRoot);
+        while (!nodes.isEmpty()) {
+            TreeNode curr = nodes.poll();
+            System.out.print(curr.value + " ");
+            if (curr.left != null) {
+                nodes.offer(curr.left);
+            }
+            if (curr.right != null) {
+                nodes.offer(curr.right);
+            }
+        }
+    }
+
+    /**
+     * 题目：栈的压入、弹出数列
+     * 输入两个整数序列。第一个表示压栈顺序，请判断第二个序列是否为该栈的弹出顺序。
+     * 假设压栈数字均不相等。
+     * 
+     * 举个栗子：
+     * int[] arrPush = {1, 2, 3, 4, 5};
+     * int[] arrPop = {2, 4, 3, 5, 1};
+     * arrPop就是一个弹栈序列。
+     */
+    public static boolean isPopOrder(int[] arrPop, int[] arrPush) {
+        
+        boolean isPossible = false;
+        Stack<Integer> assistStack = new Stack<>();
+        int popIndex = 0;
+        assistStack.push(arrPush[0]);// 首先压入第一个元素
+        int pushIndex = 1;
+        if (arrPop != null && arrPush != null) {
+            while (popIndex < arrPop.length) {
+                while (pushIndex < arrPush.length && assistStack.peek() != arrPop[popIndex]) {
+                    assistStack.push(arrPush[pushIndex++]);
+                }
+                while (popIndex < arrPop.length && assistStack.peek() == arrPop[popIndex]) {
+                    assistStack.pop();
+                    popIndex++;
+                }
+                if (pushIndex == arrPush.length && !assistStack.isEmpty()) {// 没有压栈元素了但是栈不为空
+                    break;
+                }
+            }
+            if (assistStack.isEmpty()) {
+                isPossible = true;
+            }
+        }
+        
+        return isPossible;
+     }
 
 }
