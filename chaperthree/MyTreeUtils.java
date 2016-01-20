@@ -183,14 +183,15 @@ public class MyTreeUtils {
     }
 
     /**
-     * 输入某二叉树的先序和中序遍历结果，要求重建二叉树。 
-     * 注：遍历结果中不含相同的结点值。
-     * @throws Exception 
+     * 输入某二叉树的先序和中序遍历结果，要求重建二叉树。 注：遍历结果中不含相同的结点值。
+     * 
+     * @throws Exception
      */
     /*
      * 先序遍历数组的第一个元素就是遍历树的根结点， 中序遍历数组的根节点两侧分别为左右子树的遍历
      */
-    public static TreeNode rebuildTreepreIn(int[] preorder, int[] inorder) throws Exception {
+    public static TreeNode rebuildTreepreIn(int[] preorder, int[] inorder)
+            throws Exception {
         if (preorder == null || inorder == null) {
             return null;
         }
@@ -219,7 +220,7 @@ public class MyTreeUtils {
      * @param inorderMap
      *            存放中序遍历数组的元素及其索引的map
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     private static TreeNode rebuildPreInHelper(int[] preorder, int startPre,
             int endPre, int[] inorder, int startInorder, int endInorder,
@@ -232,14 +233,17 @@ public class MyTreeUtils {
         TreeNode root = new TreeNode(preorder[startPre]);
         int rootIndex = inorderMap.get(preorder[startPre]);
         if (rootIndex < startInorder || rootIndex > endInorder) {// 前后序遍历数组不匹配
-            throw new Exception("inorderTraverse doesn't match preorderTraverse!");
+            throw new Exception(
+                    "inorderTraverse doesn't match preorderTraverse!");
         }
         // 处理左子树，左子树结点数为 rootIndex - startInorder
-        root.left = rebuildPreInHelper(preorder, startPre + 1, startPre + rootIndex - startInorder,
-                inorder, startInorder, rootIndex - 1, inorderMap);
+        root.left = rebuildPreInHelper(preorder, startPre + 1,
+                startPre + rootIndex - startInorder, inorder, startInorder,
+                rootIndex - 1, inorderMap);
         // 处理右子树，前序遍历数组中右子树遍历开始的索引为左子树结束的索引加1
-        root.right = rebuildPreInHelper(preorder, startPre + rootIndex - startInorder + 1,
-                endPre, inorder, rootIndex + 1, endInorder, inorderMap);
+        root.right = rebuildPreInHelper(preorder,
+                startPre + rootIndex - startInorder + 1, endPre, inorder,
+                rootIndex + 1, endInorder, inorderMap);
         return root;
     }
 
@@ -260,7 +264,7 @@ public class MyTreeUtils {
         return rebuildInPostHelper(inorder, 0, inorder.length - 1, postorder, 0,
                 postorder.length - 1, inorderMap);
     }
-    
+
     private static TreeNode rebuildInPostHelper(int[] inorder, int startInorder,
             int endInorder, int[] postorder, int startPost, int endPost,
             Map<Integer, Integer> inMap) {
@@ -270,24 +274,23 @@ public class MyTreeUtils {
         // TODO validate
         TreeNode root = new TreeNode(postorder[endPost]);
         int pos = inMap.get(postorder[endPost]);
-        root.left = rebuildInPostHelper(inorder, startInorder, pos - 1, postorder,
-                startPost, startPost + pos - startInorder - 1, inMap);
-        root.right = rebuildInPostHelper(inorder, pos + 1, endInorder, postorder,
-                startPost + pos - startInorder, endPost - 1, inMap);
+        root.left = rebuildInPostHelper(inorder, startInorder, pos - 1,
+                postorder, startPost, startPost + pos - startInorder - 1,
+                inMap);
+        root.right = rebuildInPostHelper(inorder, pos + 1, endInorder,
+                postorder, startPost + pos - startInorder, endPost - 1, inMap);
         return root;
     }
 
     /**
      * 由前序和后序遍历数组重建二叉树
+     * 
      * @return
      */
     /*
-     * 并不是所有的二叉树都可以根据前序和后序进行重建，有些二叉树的前序和后序结果是相同的，
-     * 比如：    2
-     *         /
-     *        1
-     * 该树的前后序遍历结果都是 [1, 2]
-     * 若一二叉树除了左右节点之外，其他所有的结点都有左右孩子，那么可以根据前后序进行重建 
+     * 并不是所有的二叉树都可以根据前序和后序进行重建，有些二叉树的前序和后序结果是相同的， 
+     * 比如： 2 / 1 该树的前后序遍历结果都是 [1, 2]
+     * 若一二叉树除了左右节点之外，其他所有的结点都有左右孩子，那么可以根据前后序进行重建.
      */
     public static TreeNode rebuildTreePrePost(int[] preorder, int[] postorder) {
         if (preorder == null || postorder == null) {
@@ -297,10 +300,10 @@ public class MyTreeUtils {
         for (int i = 0; i < postorder.length; i++) {
             postMap.put(postorder[i], i);
         }
-        return rebuildPrePostHelper(preorder, 0, preorder.length - 1, postorder, 0,
-                postorder.length - 1, postMap);
+        return rebuildPrePostHelper(preorder, 0, preorder.length - 1, postorder,
+                0, postorder.length - 1, postMap);
     }
-    
+
     private static TreeNode rebuildPrePostHelper(int[] preorder, int startPre,
             int endPre, int[] postorder, int startPost, int endPost,
             Map<Integer, Integer> postMap) {
@@ -308,14 +311,68 @@ public class MyTreeUtils {
         if (startPre == endPre) {// 碰到没有左子树的情况，那么这一定是个叶节点，返回这个结点
             return root;
         }
-     // 先序遍历数组中根节点的下一个结点是左子树的根结点，在后序遍历中是最后一个结点
-     // TODO validate
+        // 先序遍历数组中根节点的下一个结点是左子树的根结点，在后序遍历中是最后一个结点
+        // TODO validate
         int pos = postMap.get(preorder[++startPre]);
-        root.left = rebuildPrePostHelper(preorder, startPre, startPre + pos - startPost, 
-                postorder, startPost, pos, postMap);
-        root.right = rebuildPrePostHelper(preorder, startPre + pos - startPost + 1, 
-                endPre, postorder, pos + 1, endPost - 1, postMap);
+        root.left = rebuildPrePostHelper(preorder, startPre,
+                startPre + pos - startPost, postorder, startPost, pos, postMap);
+        root.right = rebuildPrePostHelper(preorder,
+                startPre + pos - startPost + 1, endPre, postorder, pos + 1,
+                endPost - 1, postMap);
         return root;
+    }
+
+    /**
+     * 题目：输入两棵二叉树A和B，判断B是否为A的子结构
+     */
+    public static boolean hasSubTree(TreeNode t1, TreeNode t2) {
+        boolean result = false;
+        if (t1 != null && t2 != null) {
+            if (t1.value == t2.value) {
+                result = check(t1, t2);
+            }
+            if (!result) {// 找左子树
+                result = hasSubTree(t1.left, t2);
+            }
+            if (!result) {// 左子树找不到就找右子树
+                result = hasSubTree(t1.right, t2);
+            }
+        }
+        return result;
+    }
+
+    private static boolean check(TreeNode t, TreeNode t2) {
+        if (t2 == null) {
+            return true;
+        }
+        if (t == null) {
+            return false;
+        }
+        if (t.value != t2.value) {
+            return false;
+        }
+        return check(t.left, t2.left) && check(t.right, t2.right);// 分别检查左右子树
+    }
+
+    /**
+     * 题目：请完成一个方法，输入一个二叉树，该方法输出它的镜像。
+     */
+    /*
+     * 实际上就是前序遍历这棵树，没有遍历到子节点就交换两个孩子结点的位置
+     */
+    public static void mirrorRecursively(TreeNode head) {
+        if (head == null) {
+            return;
+        }
+        TreeNode temp = head.left;
+        head.left = head.right;
+        head.right = temp;
+        if (head.left != null) {// 左孩子不是叶子结点
+            mirrorRecursively(head.left);
+        }
+        if (head.right != null) {// 右孩子不是叶子结点
+            mirrorRecursively(head.right);
+        }
     }
 
 }
