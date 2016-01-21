@@ -447,6 +447,9 @@ public class MyTreeUtils {
      * 若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值;
      * 若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值; 
      * 它的左、右子树也分别为二叉排序树。
+     * 
+     * 
+     * 相近的题目有：判断给出的数列是否是BST的前序遍历数列（root结点在最前面）
      */
     public static boolean verifySequenceBST(int[] sequence, int start, int end) {
         if (sequence == null) {
@@ -486,4 +489,46 @@ public class MyTreeUtils {
         return left & right;
         
     }
+    
+    
+    /**
+     * 题目：输入一棵二叉树和一个整数，打印出bt中结点值的和为输入整数的所有路径。
+     * 从树的根节点开始往下一直到叶节点所经过的结点形成一条路径。
+     */
+    /*
+     * 分析： 路径是根结点到叶结点，先访问根结点，因此要用先序遍历，
+     * 同时需要使用一个数据结构来保存结点，用栈比较合适的。
+     * 还需要一个统计变量来叠加路径上的值
+     */
+    public static void findPath(TreeNode root, int expectedSum) {
+        if (root == null) {
+            return;
+        }
+        int pathSum = 0;
+        Stack<TreeNode> path = new Stack<>();
+        findPathHelper(root, path, pathSum, expectedSum);
+    }
+
+    private static void findPathHelper(TreeNode treeNode, Stack<TreeNode> path, int pathSum, int expectedSum) {
+        pathSum += treeNode.value;
+        path.push(treeNode);
+        boolean isLeaf = treeNode.left == null && treeNode.right == null;
+        if (isLeaf && pathSum == expectedSum) {
+            System.out.println("Find a path:");
+            for (TreeNode node : path) {// 从栈底向栈顶打印元素，但不删除元素
+                System.out.print(node.value + " ");
+            }
+            System.out.println();
+        }
+        
+       if (treeNode.left != null) {
+           findPathHelper(treeNode.left, path, pathSum, expectedSum);
+       }
+       if (treeNode.right != null) {
+           findPathHelper(treeNode.right, path, pathSum, expectedSum);
+       }
+       path.pop();// 达到了根结点，在返回递归之前，要把现在的结点从栈中弹出，因为它已经不在路径上了
+    }
+    
+    
 }
