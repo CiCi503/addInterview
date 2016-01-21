@@ -1,5 +1,7 @@
 package chapertwo;
 
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 public class MyListUtils {
 
     /**
@@ -387,4 +389,61 @@ public class MyListUtils {
        return mergedHead;
     }
     
+    /**
+     * 题目：复杂链表的复制
+     */
+    public static ComplexListNode CloneComlexList(ComplexListNode head) {
+        if (head == null) {
+            return head;
+        }
+        cloneNodes(head);
+        connectSublingNodes(head);
+        return splitList(head); 
+    }
+
+    private static void cloneNodes(ComplexListNode head) {
+        ComplexListNode curr = head;
+        while (curr != null) {
+            ComplexListNode cloneCurr = new ComplexListNode();
+            cloneCurr.value = curr.value;
+            cloneCurr.next = curr.next;
+            cloneCurr = curr.next;
+            curr = curr.next;
+        }
+    }
+    
+    private static void connectSublingNodes(ComplexListNode head) {
+        ComplexListNode curr = head;
+        while (curr != null) {
+            ComplexListNode cloneNode = curr.next; 
+            if (curr.sibling != null) {//curr.sibling=null会发生空指针异常
+                cloneNode.sibling = curr.sibling.next;
+            }
+            curr = cloneNode.next;
+            
+        }
+    }
+    
+    private static ComplexListNode splitList(ComplexListNode head) {
+        ComplexListNode curr = head;
+        ComplexListNode cloneHead = null;
+        ComplexListNode cloneNode = null;
+        if (curr != null) {
+            cloneHead = curr.next;
+            cloneNode = cloneHead;
+            curr.next = cloneNode.next;//这两条语句不能合并
+            curr = curr.next;// 
+        }
+        while (curr!= null) {
+            cloneNode.next = curr.next;
+            cloneNode = cloneNode.next;
+            
+            curr.next = cloneNode.next;
+            curr = curr.next;
+        }
+        
+        return cloneHead;
+    }
+    
+
 }
