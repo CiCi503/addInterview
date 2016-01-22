@@ -530,5 +530,42 @@ public class MyTreeUtils {
        path.pop();// 达到了根结点，在返回递归之前，要把现在的结点从栈中弹出，因为它已经不在路径上了
     }
     
-    
+    /**
+     *  题目：输入一颗BST，将其转换成一个排序的双向链表。
+     *  要求不能创建任何新的结点，只能调整树中结点指针的指向
+     */
+    /*
+     * 方法一：使用栈作为中间容器，存放中序遍历的结点
+     * 步骤跟非递归遍历二叉树是一致的
+     */
+    public static TreeNode BST2DuLinkList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        Stack<TreeNode> nodes = new Stack<>();
+        TreeNode curr = root;
+        TreeNode prev = null;// 标识前一个结点，因为要移位
+        
+        boolean isHead = true;// 为了标识头部
+        
+        while (curr != null || !nodes.isEmpty()) {
+            if (curr != null) {
+                nodes.push(curr);
+                curr = curr.left;
+            } else {
+                curr = nodes.pop();
+                if (isHead) {// DuLinkList的头部
+                    root = curr;
+                    prev = root;
+                    isHead = false;
+                } else {
+                    prev.right = curr;
+                    curr.left = prev;
+                    prev = curr;
+                }
+                curr = curr.right;
+            }
+       }
+       return root;
+    }
 }
