@@ -390,7 +390,14 @@ public class MyListUtils {
     }
     
     /**
-     * 题目：复杂链表的复制
+     * 题目：复杂链表的复制。
+     * 在复杂链表中，每个结点除了有一个next，还有一个引用sibling，指向
+     */
+    /*
+     * 分三步：
+     * 1.在原来的结点后面加一个各自的副本
+     * 2.副本结点连接sibling结点
+     * 3.将副本结点挑出来，返回它的头部
      */
     public static ComplexListNode CloneComlexList(ComplexListNode head) {
         if (head == null) {
@@ -407,8 +414,8 @@ public class MyListUtils {
             ComplexListNode cloneCurr = new ComplexListNode();
             cloneCurr.value = curr.value;
             cloneCurr.next = curr.next;
-            cloneCurr = curr.next;
-            curr = curr.next;
+            curr.next = cloneCurr;
+            curr = cloneCurr.next;
         }
     }
     
@@ -428,10 +435,10 @@ public class MyListUtils {
         ComplexListNode curr = head;
         ComplexListNode cloneHead = null;
         ComplexListNode cloneNode = null;
-        if (curr != null) {
+        if (curr != null) {// 第一次的处理
             cloneHead = curr.next;
             cloneNode = cloneHead;
-            curr.next = cloneNode.next;//这两条语句不能合并
+            curr.next = cloneNode.next;//这两条语句不能合并 
             curr = curr.next;// 
         }
         while (curr!= null) {
