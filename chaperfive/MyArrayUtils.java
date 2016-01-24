@@ -86,6 +86,44 @@ public class MyArrayUtils {
     }
     
     
-    
+    /**
+     * 题目：对于一个无序数组A，请设计一个算法，求出需要排序的最短子数组的长度。
+     * 给定一个整数数组A及它的大小n，请返回最短子数组的长度。
+     * 举个栗子：
+     * [1,5,3,4,2,6,7],7
+     * 输出为4
+     */
+    public static int findShortestLen(int[] arr, int len) {
+        if (arr == null) {
+           throw new RuntimeException("The array input is null!");
+        }
+        if (len != arr.length) {
+            throw new RuntimeException("The len input is not match the length of array!");
+        }
+        int right = 0 ;
+        int left = len - 1;
+        int max = arr[0];// 设置默认最大值
+        int min = arr[len - 1];// 设置默认最小值
+        
+        for (int i = 1; i < len; i++) {// 正向遍历找到右边界
+            if (arr[i] >= max) {// 当前元素要大于max，就要更新max
+                max = arr[i];
+            } else {// 否则，更新右边界
+                right = i;
+            }
+        }
+        for (int i = len - 2; i >= 0; i--) {
+            if (arr[i] <= min) {
+                min = arr[i];
+            } else {
+                left = i;
+            }
+        }
+        
+        if (right < left) {// 当数组已完全排序，right和left还是初始值，此时right < left
+            return 0;
+        }
+        return right - left + 1;
+    }
     
 }
