@@ -568,4 +568,48 @@ public class MyTreeUtils {
        }
        return root;
     }
+    
+    /*
+     * 方法二：使用递归
+     * 解题思路：
+     * 1.将左子树构造成双链表，并返回链表头节点。
+     * 2.定位至左子树双链表最后一个节点。
+     * 3.如果左子树链表不为空的话，将当前root追加到左子树链表。
+     * 4.将右子树构造成双链表，并返回链表头节点。
+     * 5.如果右子树链表不为空的话，将该链表追加到root节点之后。
+     * 6.根据左子树链表是否为空确定返回的节点。（是否只有右子树）
+     */
+    public static TreeNode BST2DuLinkListRecursely(TreeNode treeRoot) {
+        if (treeRoot == null) {
+            return null;
+        }
+        if (treeRoot.left == null && treeRoot.right == null) {// 左子树的最左端的结点
+            return treeRoot;
+        }
+        // 1.
+        TreeNode leftSubHead = BST2DuLinkList(treeRoot.left);// 左子树形成的双链表
+        TreeNode curr = leftSubHead;
+        // 2.
+        while (leftSubHead != null && curr.right != null) {// 找到左子树双链表的最后一个结点
+            curr = curr.right;
+        }
+        // 3.
+     // 只有右子树的BST，上面的遍历结果leftSubHead为null
+        if (leftSubHead != null) {
+            curr.right = treeRoot;
+            treeRoot.left = curr;
+        }
+        // 4. 
+        TreeNode rightSubHead = BST2DuLinkList(treeRoot.right);
+        // 5.
+     // 只有左子树的BST，上面的遍历结果rightSubHead为null
+        if (rightSubHead != null) {
+            rightSubHead.left = treeRoot;
+            treeRoot.right = rightSubHead;
+        }
+        // 6.
+        return leftSubHead != null ? leftSubHead : treeRoot;
+        
+        
+    }
 }
