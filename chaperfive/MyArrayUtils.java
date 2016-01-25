@@ -1,5 +1,7 @@
 package chaperfive;
 
+import javax.xml.namespace.QName;
+
 public class MyArrayUtils {
     /**
      * 题目：输入一个递增排序数组的一个旋转，输出旋转数组的最小值。
@@ -94,8 +96,8 @@ public class MyArrayUtils {
      * 输出为4
      */
     public static int findShortestLen(int[] arr, int len) {
-        if (arr == null) {
-           throw new RuntimeException("The array input is null!");
+        if (arr == null || arr.length == 0) {
+           throw new RuntimeException("The array input is null or the length of array is 0!");
         }
         if (len != arr.length) {
             throw new RuntimeException("The len input is not match the length of array!");
@@ -125,5 +127,110 @@ public class MyArrayUtils {
         }
         return right - left + 1;
     }
+    /**
+     * 题目：数组中出现超过一半的数字
+     * 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+     * 举个栗子：
+     * 输入一个长度为9的数组｛1，2，3，2，2，2，5，4，2｝。
+     * 由于数字2在数组中出现5次，超过数组长度的一半，因此输出2.
+     * 注：若输出为0，则输入参数不合理或者没有符合要求的结果
+     */
+    
+    /*
+     * 方法1：基于patition快排思想
+     * 时间复杂度为O(n)
+     * 思路：找到数组中第n/2大的数，即中位数。
+     * 但是中位数对应的数字的出现次数不一定超过了数组长度的一半，
+     * 所以要有一个检验的过程。
+     * 
+     * 该解法需要改变输入的数组！
+     */
+    public static int moreThanHalfNum(int[] array) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int stIndex = 0;
+        int endIndex = array.length - 1;
+        int mid = endIndex >>> 1;
+        int pivotIndex = partition(array, stIndex, endIndex);
+        while (pivotIndex != mid) {
+            if (pivotIndex > mid) {
+                endIndex = pivotIndex - 1;
+            } else {
+                stIndex = pivotIndex + 1;
+            }
+            pivotIndex = partition(array, stIndex, endIndex);
+        }
+        int result = array[pivotIndex];
+        if (!isMoreThanHalf(array, result)) {
+            return 0;
+        }
+        return result;
+    }
+    // 检查找到的result在数组中出现的次数是否超过了数组长度的一半
+    private static boolean isMoreThanHalf(int[] array, int result) {
+        boolean isQualifed = false;
+        int times = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == result) {
+                times++;
+            }
+        }
+        if (times << 1 >= array.length) {
+            isQualifed = true;
+        }
+        
+        return isQualifed;
+    }
+
+    public static int partition(int[] array, int stIndex, int endIndex) {
+        int pivot = array[stIndex];
+        while (stIndex < endIndex) {
+            while (stIndex < endIndex && pivot < array[endIndex]) {
+                endIndex--;
+            }
+            array[stIndex] = array[endIndex];
+            while (stIndex < endIndex && pivot >= array[stIndex]) {
+                stIndex++;
+            }
+            array[endIndex] = array[stIndex];
+        }
+        array[stIndex] = pivot;
+        return stIndex;
+    }
+    
+    
+    /*
+     * 方法2：根据数组特点找出O(n)的算法
+     * 在遍历数组时保存两个值：一个是数组中的一个数字，一个是次数。
+     * 遍历下一个元素时，若跟我们之前保存的数字相同，则次数加1，
+     * 若不同就减1；若次数等于0了，那么就重新设置保存的数字，将次数重置。
+     * 那么要找的数字肯定是最后一次把次数设置为时的数字。
+     * 
+     * 该解法不会改变输入的数组！
+     */
+    public static int moreThanHalfNum2(int[] array) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int result = array[0];
+        int times = 1;
+        for (int i = 1, len = array.length; i < len; i++) {
+            if (times == 0) {
+                result = array[i];
+                times = 1;
+            } else if (array[i] == result) {
+                times++;
+            } else {
+                times--;
+            }
+        }
+        if (!isMoreThanHalf(array, result)) {
+            return 0;
+        }
+        return result;
+    }
+    
     
 }
+
