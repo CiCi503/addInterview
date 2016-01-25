@@ -610,6 +610,5 @@ public class MyTreeUtils {
         // 6.
         return leftSubHead != null ? leftSubHead : treeRoot;
         
-        
     }
 }
