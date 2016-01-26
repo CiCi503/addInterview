@@ -1,6 +1,8 @@
 package chaperfive;
 
-import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 public class MyArrayUtils {
     /**
@@ -230,7 +232,81 @@ public class MyArrayUtils {
         }
         return result;
     }
+    /*
+     * 方法3：有了以上排序的思路，也可以使用冒泡法，排出最小的k个
+     */
+    /*
+     * 方法4：使用额外的数据结构hashMap来存储每个数字出现的次数
+     */
     
-    
+    /**
+     * 题目：最小的k个数
+     * 输入n个整数，找出其中最小的k个数。
+     * 举个栗子：输入为4、5、1、6、2、7、3、8
+     * 则最小的4个数字是1、2、3、4
+     */
+    /*
+     * 方法1：对数组进行排序，取前k个数，最好的时间复杂度为O(nlogn)。
+     */
+    /*
+     * 方法2：基于partition方法（快排思想）
+     * 时间复杂度为O(n)，使用该方法后，原数组会改变
+     * 
+     * 特殊测试(返回[])：
+     * input==null
+     * input.lenth=0;
+     * k<=0;
+     * k>input.length
+     */
+    public static ArrayList<Integer> getLeastNNum(int[] input, int k) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (input == null || input.length == 0 || k <= 0 || k > input.length) {
+            return result;
+        }
+        int stIndex = 0;
+        int endIndex = input.length - 1;
+        int pivotIndex = partition(input, stIndex, endIndex);
+        while (pivotIndex != k - 1) {
+            if (pivotIndex > k - 1) {
+                endIndex = pivotIndex - 1;
+                
+            } else {
+                stIndex = pivotIndex + 1;
+            }
+            pivotIndex = partition(input, stIndex, endIndex);
+        }
+        
+        for (int i = 0; i < k; i++) {
+            result.add(input[i]);
+        }
+        return result;
+    }
+    /*
+     * 方法3：O(nlgk)算法，特别适合大数据处理
+     * 创建一个大小为k的容器来存储最小的k个数，当新的数到来时，与容器中最小数进行比较，
+     * 若比容器中最大数还要大，那么不考虑，否则就要把容器中最大的数取出，替换成新数。
+     * 
+     * 使用红黑树来实现该容器，在java里有hashMap，其底层实现是hashMap,查找、输入和删除
+     * 都只需要O(logk)。
+     */
+    public static void getLeastNNum2(int[] input, int k) {
+        TreeMap<Integer, Integer> result = new TreeMap<>();
+        if (input == null || input.length == 0 || k <= 0 || k > input.length) {
+            return;
+        }
+        int i = 0;
+        int lastKey = 0;
+        for (; i < k; i++) {// 先插入k个数，TreeMap会对键进行排序
+            result.put(input[i], i);
+        }
+        
+        for (int j = i; j < input.length; j++) {
+            if ((lastKey = result.lastKey()) > input[j]) {
+                result.remove(lastKey);// 删除
+                result.put(input[j], j);// 替换
+            }
+        }
+        System.out.println(result.keySet());// 打印所有的键
+    }
 }
 
