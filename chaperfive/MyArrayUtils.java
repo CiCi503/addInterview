@@ -307,5 +307,34 @@ public class MyArrayUtils {
         }
         System.out.println(result.keySet());// 打印所有的键
     }
+
+    /**
+     * 题目：连续字数组的最大和
+     * 输入一个整形数组，数组里有整数也有负数。数组中一个或者连续多个整数组成一个字数组。
+     * 求所有字数组的和的最大值。要求时间复杂度为O(n)
+     */
+
+    /*
+     * 思路：当curSum累加到0或者负数时，curSum从下一个数开始重新计算,
+     * 每次greatestSum总是更新到目前最大的值
+     * 
+     * 若以f(i)表示以第i个数字结尾的字数组的最大和，那么我们需要求出max(f(i))。
+     * 当i=0或f(i-1)<=0时，f(i)=Data[i],
+     * 当f(i-1)>0时，f(i)=f(i-1)+Data[i].
+     * 虽然我们用递归的方式分析动态规划的问题，但最终都会基于循环去编码。
+     */
+    public static int findGreatestSumOfSubArray(int[] array) {
+        if(array == null || array.length == 0) {
+            return  0;
+        }
+        int curSum = array[0];
+        int greatestSum = array[0];
+        for (int i = 1, len = array.length; i < len; i++) {
+            curSum = curSum > 0 ? curSum + array[i] : array[i];// f(i)
+            greatestSum = Math.max(curSum, greatestSum); // max(f(i))
+        }
+        return greatestSum;
+    }
+
 }
 
