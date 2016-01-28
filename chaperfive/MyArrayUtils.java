@@ -335,6 +335,65 @@ public class MyArrayUtils {
         }
         return greatestSum;
     }
-
+    
+    /**
+     * 题目：输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。
+     * 举个栗子：
+     * 输入12，从1到12这些整数中包含1的数字有1，10，11和12，一共出现5次。
+     */
+    
+    /*
+     * 方法1：最原始的方法
+     * 从头到尾进行遍历，每个数字需要lgn次才能把所有的数位遍历完，
+     * 一个n个数字，所以时间复杂度为O(nlgn)。
+     * 当n很大时，该解法效率不高。
+     */
+    public static int numberOf1Between1AndN(int n) {
+        if (n < 1) {
+            return 0;
+        }
+        int count = 0;
+        int curr = 0;
+        for (int i = 1; i <= n; i++) {
+            curr = i;
+            while (curr != 0) {
+                if (curr % 10 == 1) {
+                    count++;
+                }
+                curr /= 10;
+            }
+        }
+        return count;
+    }
+    
+    public static int numberOf1Between1AndN2(int n) {
+        if (n < 1) {
+            return 0;
+        }
+        int count = 0;
+        int lowNum = 0;
+        int curNum = 0;
+        int highNum = 0;
+        int factory = 1;
+        while (n / factory != 0) {
+            lowNum = n - (n / factory) * factory;
+            curNum = (n / factory) % 10;
+            highNum = n / (factory * 10);
+            
+          //如果为0,出现1的次数由高位决定  
+            if (curNum == 0) {
+                count += highNum * factory; 
+         //如果为1,出现1的次数由高位和低位决定  
+            } else if (curNum == 1) {
+                count += (highNum * factory + lowNum + 1);
+            } else {
+        //如果大于1,出现1的次数由高位决定  
+                count += (highNum + 1) * factory;
+            }
+            factory *= 10;
+        }
+        return count;
+    }
+    
 }
 
