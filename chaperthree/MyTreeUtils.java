@@ -3,6 +3,7 @@ package chaperthree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -609,6 +610,40 @@ public class MyTreeUtils {
         }
         // 6.
         return leftSubHead != null ? leftSubHead : treeRoot;
-        
     }
+    
+    /**
+     * 题目：给一棵二叉树，找出从根节点到叶子节点的所有路径。
+     */
+    /*
+     * 思路：如果是输出全部路径的题目，那一定会想到深度搜索的方式。
+     * 在深度优先搜索的每一层的时候用Arraylist保存从根节点到当前节点的所有路径上面的点。
+     * 然后判断如果是叶子节点，那么当前是一个可行解，保存在最后要返回的答案里面。
+     */
+    public static List<String> binaryTreePaths(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        pathHelper(root, String.valueOf(root.value), result);
+        return result;
+    }
+
+    private static void pathHelper(TreeNode root, String paths, List<String> result) {
+        if (root == null) {
+            return;
+        }
+        if (root.left == null && root.right == null) {
+            result.add(paths);
+            return;
+        }
+        if (root.left != null) {
+           pathHelper(root.left, paths + "→" + root.left.value, result);
+        }
+        if (root.right != null) {
+            pathHelper(root.right, paths + "→" + root.right.value, result);
+        }
+    }
+    
+    
 }
