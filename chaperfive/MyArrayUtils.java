@@ -524,7 +524,9 @@ public class MyArrayUtils {
     /*
      * 方法2：用一个数组来保存已经生成的丑数，
      * 每一个丑数都是前面的丑数乘以2、3或者5得到的。
-     * 因为只考虑了丑数，而不是逐个判断是不是丑数，因此效率更高
+     * 因为只考虑了丑数，而不是逐个判断是不是丑数，因此效率更高。
+     * 求第1500个丑数，那么创建一个1500容量的数组，需要占用1500*4B=6KB的内存。
+     * 以空间消耗换得了时间效率。
      */
     public static int getUglyNumber2(int index) {
         if (index <= 0) {
@@ -532,6 +534,8 @@ public class MyArrayUtils {
         }
         int[] uglyNums = new int[index];
         uglyNums[0] = 1;
+        
+        // 记录乘2，乘3和乘5的数的索引
         int multiply2 = 0, multiply3 = 0, multiply5 = 0;
         int min = 0;
         for (int i = 1; i < index; i++) {
@@ -545,6 +549,44 @@ public class MyArrayUtils {
         return uglyNums[index - 1];
     }
     
+    /**
+     * 题目：在字符串中找出第一个只出现一次的字符。
+     * 举个栗子：输入为"abaccdeff"，
+     * 则输出"b"。
+     */
+    /*
+     * 方法1：最直接想到的方法。
+     * 从头开始遍历字符串，逐个检查当前字符在该字符串中是否只出现了一次。
+     * 字符串长度为n，每个字符可能与后面的O(n)个字符相比较，因此时间复杂度为O(n^2)。
+     */
+    
+    /*
+     * 方法2：假设字符串中的字符为ASCII字符，256种可能。
+     * 构造一个简单的Map，键为字符串中的字符，值为它在字符串中出现的次数。
+     * 这样可以在O(1)的时间内找到某个字符在字符串中出现的次数。
+     * 字符串长度为n，则时间复杂度为O(n)。
+     * 数组大小固定，因此空间复杂度为O(1)。
+     */
+    public static char firstNotRepeatingChar(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        char[] chars = str.toCharArray();
+        int[] counts = new int[256];
+        char result = 0;
+        
+        // 两遍遍历字符串
+        for (int i = 0, len = chars.length; i < len; i++) {
+            counts[chars[i]]++;
+        }
+        for (int i = 0, len = chars.length; i < len; i++) {
+            if (counts[chars[i]] == 1) {
+                result = chars[i];
+                break;
+            }
+        }
+        return result;
+    }
     
 }
 
