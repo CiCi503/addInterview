@@ -409,12 +409,14 @@ public class MyArrayUtils {
      * 输入数组{3, 32, 321},则打印出这3个数字能排成的最小数字321323
      */
     /*
+     * 首先这是一个大数问题。
      * 最直接的方法是列出所有可能的组合，然后比较出最小的，但是效率低。
      * 
      * 思路：将输入的整型数组转换成字符串型数组，然后字符串数组进行排序，
      * 最后依次输出字符串数组即可。关键点在于字符串中的数组要根据特殊的比较规则进行排序，
      * 而不能按照传统的字符串排序。
      * 定义如下：ab<ba，则a<b。
+     * 如：对321和32，排序为32132<32321，所以321<32
      * 想到使用Comparator<T>接口,需要一个容器来存放数组。
      * 
      * 方法1仍然使用数组，将整型数组转变成字符串数组，借助Arrays类的静态方法sort,
@@ -478,6 +480,69 @@ public class MyArrayUtils {
             sb.append(num);
         }
         return sb.toString();
+    }
+    
+    /**
+     * 题目：我们把只包含因子2、3和5的数称为丑数。求按从小到大的顺序的第1500个丑数。
+     * 举个栗子：
+     * 6和8都是丑数，但14不是，因为它还有因子7。
+     * 习惯上，我们把1当做第一个丑数。
+     */
+    
+    /*
+     * 方法1：逐个判断每个整数是不是丑数，
+     * 虽然直观，但是效率很低
+     */
+    public static int getUglyNumber(int index) {
+        if (index <= 0) {
+            return 0;
+        }
+        int result = 0;
+        int uglyCount = 0;
+        while (uglyCount < index) {
+            result++;
+            if (isUgly(result)) {
+               uglyCount++; 
+            }
+        }
+        return result;
+    }
+
+    private static boolean isUgly(int result) {
+        while (result % 2 == 0) {
+            result /= 2;
+        }
+        while (result % 3 == 0) {
+            result /= 3;
+        }
+        while (result % 5 == 0) {
+            result /= 5;
+        }
+        return result == 1 ? true : false;
+    }
+    
+    /*
+     * 方法2：用一个数组来保存已经生成的丑数，
+     * 每一个丑数都是前面的丑数乘以2、3或者5得到的。
+     * 因为只考虑了丑数，而不是逐个判断是不是丑数，因此效率更高
+     */
+    public static int getUglyNumber2(int index) {
+        if (index <= 0) {
+            return 0;
+        }
+        int[] uglyNums = new int[index];
+        uglyNums[0] = 1;
+        int multiply2 = 0, multiply3 = 0, multiply5 = 0;
+        int min = 0;
+        for (int i = 1; i < index; i++) {
+            
+            min = Math.min(Math.min(uglyNums[multiply2] * 2, uglyNums[multiply3] * 3), uglyNums[multiply5] * 5);
+            uglyNums[i] = min;
+            multiply2 = uglyNums[multiply2] * 2 == min ? multiply2 + 1: multiply2;
+            multiply3 = uglyNums[multiply3] * 3 == min ? multiply3 + 1: multiply3;
+            multiply5 = uglyNums[multiply5] * 5 == min ? multiply5 + 1: multiply5;
+        }
+        return uglyNums[index - 1];
     }
     
     
