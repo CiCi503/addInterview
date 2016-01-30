@@ -1,8 +1,13 @@
 package chaperfive;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.TreeMap;
+
+import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 public class MyArrayUtils {
     /**
@@ -365,7 +370,9 @@ public class MyArrayUtils {
         }
         return count;
     }
-    
+    /*
+     * 方法2：从数字的规律着手
+     */
     public static int numberOf1Between1AndN2(int n) {
         if (n < 1) {
             return 0;
@@ -394,6 +401,85 @@ public class MyArrayUtils {
         }
         return count;
     }
+    
+    /**
+     * 题目：输入一个正整数数组，把数组里所有的数字拼接起来排成一个数，
+     * 打印能拼接出的所有数字中最小的一个。
+     * 举个栗子：
+     * 输入数组{3, 32, 321},则打印出这3个数字能排成的最小数字321323
+     */
+    /*
+     * 最直接的方法是列出所有可能的组合，然后比较出最小的，但是效率低。
+     * 
+     * 思路：将输入的整型数组转换成字符串型数组，然后字符串数组进行排序，
+     * 最后依次输出字符串数组即可。关键点在于字符串中的数组要根据特殊的比较规则进行排序，
+     * 而不能按照传统的字符串排序。
+     * 定义如下：ab<ba，则a<b。
+     * 想到使用Comparator<T>接口,需要一个容器来存放数组。
+     * 
+     * 方法1仍然使用数组，将整型数组转变成字符串数组，借助Arrays类的静态方法sort,
+     * 使用自定义的比较器完成从小到大的排序。
+     * 
+     * 方法2使用的是List，没有将整型数组转变成字符串数组，而是在完成比较器的时候定义特殊的比较规则。
+     * 接住Colletions类的静态方法sort
+     * 
+     * 方法1
+     */
+    public static String printMinNumber(int [] numbers) {
+        if (numbers == null || numbers.length == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        
+//        Comparator<Integer> minComparator = new Comparator<Integer>() {
+//            @Override
+//            public int compare(Integer o1, Integer o2) {
+//                return (o1 + "" + o2).compareTo(o2 + "" + o1);
+//            }
+//        };
+        // JDK8的新特性函数式编程，Comparator是一个函数式接口，可以使用Lambda表达式
+        Comparator<String> minComparator = (o1, o2) -> (o1 + o2).compareTo(o2 + o1);
+        
+        String[] numsArr = intArrToStrArr(numbers);
+        Arrays.sort(numsArr, minComparator);
+        for (String str : numsArr) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+
+    // 将整型数组转换成字符串数组
+    private static String[] intArrToStrArr(int[] numbers) {
+        String[] numsArr = new String[numbers.length];
+        for (int i = 0; i < numbers.length; i++) {
+            numsArr[i] = numbers[i] + "";
+        }
+        return numsArr;
+    }
+    
+    /*
+     * 方法2
+     */
+    public static String printMinNumber2(int [] numbers) {
+        if (numbers == null || numbers.length == 0) {
+            return "";
+        }
+        // JDK7新特性，钻石语法
+        List<Integer> numlist = new ArrayList<>(numbers.length);
+        for (int num : numbers) {
+            numlist.add(num);
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        Comparator<Integer> minComparator = (o1, o2) -> (o1 + "" + o2).compareTo(o2 + "" + o1);
+        
+        Collections.sort(numlist, minComparator);
+        for (int num : numlist) {
+            sb.append(num);
+        }
+        return sb.toString();
+    }
+    
     
 }
 
