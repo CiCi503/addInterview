@@ -561,7 +561,7 @@ public class MyArrayUtils {
      */
     
     /*
-     * 方法2：假设字符串中的字符为ASCII字符，256种可能。
+     * 方法2：假设字符串中的字符为ASCII字符，256种可能，所以可以使用一个256长度的数组进行表示。
      * 构造一个简单的Map，键为字符串中的字符，值为它在字符串中出现的次数。
      * 这样可以在O(1)的时间内找到某个字符在字符串中出现的次数。
      * 字符串长度为n，则时间复杂度为O(n)。
@@ -586,6 +586,34 @@ public class MyArrayUtils {
             }
         }
         return result;
+    }
+    
+    /**
+     * 题目：输入两个字符串，从第一字符串中删除第二个字符串中所有的字符。
+     */
+    /*
+     * 使用与上面相同的思路，查找的时间复杂度降到了O(1)，
+     * 整个算法的时间复杂度为O(n)
+     */
+    public static String delCharInStr(String str1, String str2) {
+        if (str2 == null || str2.length() == 0 || str1 == null || str1.length() == 0) {
+            return str1;
+        }
+        int[] counts = new int[256];
+        char[] chars1 = str1.toCharArray();
+        char[] chars2 = str2.toCharArray();
+        StringBuilder result = new StringBuilder();
+        
+        for (int i = 0, len = chars2.length; i < len; i++) {
+            counts[chars2[i]]++;
+        }
+        for (int i = 0, len = chars1.length; i < len; i++) {
+            if (counts[chars1[i]] == 0) {
+                result.append(chars1[i]);
+            }
+        }
+        
+        return result.toString();
     }
     
 }
