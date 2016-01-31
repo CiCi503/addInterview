@@ -593,7 +593,9 @@ public class MyArrayUtils {
      */
     /*
      * 使用与上面相同的思路，查找的时间复杂度降到了O(1)，
-     * 整个算法的时间复杂度为O(n)
+     * 整个算法的时间复杂度为O(n)。
+     * 
+     * 使用该思路也可以解决换位词问题！或者字符串中删除相同的字符！
      */
     public static String delCharInStr(String str1, String str2) {
         if (str2 == null || str2.length() == 0 || str1 == null || str1.length() == 0) {
@@ -614,6 +616,70 @@ public class MyArrayUtils {
         }
         
         return result.toString();
+    }
+    
+    /**
+     * 题目：求出给定数组中的逆序数对的总数。
+     * 举个栗子：
+     * 输入 array[] = {7, 5, 6, 4},
+     * 输出为5，因为一共5对逆序数对，
+     * （7, 5）（7, 6）（7, 4）（5, 4）（6, 4）
+     */
+    
+    /*
+     * 方法1：顺序扫描数组，扫描到一个数字的时候，逐个比较它与其后数字的大小，
+     * 以此来得到逆序对的数目。假设数组长度为n,则该方法的时间复杂度为O(n^2)。
+     */
+    
+    /*
+     * 方法2：基于归并排序的算法。
+     * 多出一个长度为n的空间来存放临时操作数组，
+     * 而归并算法的时间复杂度为O(nlogn)
+     */
+    public static int pairCount = 0;// 定义一个全局变量来控制逆序对数目
+    public static int inversePairs(int [] array) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int len = array.length;
+        int[] copy = new int[len];
+        inversePairsCore(array, copy, 0, array.length - 1);
+        return pairCount;
+        
+    }
+
+    private static void inversePairsCore(int[] array, int[] copy, int start, int end) {
+        if (start < end) {
+            int mid = (start + end) >> 1;
+            inversePairsCore(array, copy, start, mid);
+            inversePairsCore(array, copy, mid + 1, end);
+            merge(array, copy, start, mid, mid + 1, end);
+        }
+        
+    }
+    
+//  合并
+    private static void merge(int[] array, int[] copy, int lStart, int lEnd, int rStart, int rEnd) {
+        int i = lEnd;
+        int j = rEnd;
+        int indexCopy = rEnd;// copy数组的索引变量
+        while (i >= lStart && j >= rStart) {
+            if (array[i] > array[j]) {
+                copy[indexCopy--] = array[i--];
+                pairCount += (j - rStart + 1);
+            } else {
+                copy[indexCopy--] = array[j--];
+            }
+        }
+        while (i >= lStart) {
+            copy[indexCopy--] = array[i--];
+        }
+        while (j>= rStart) {
+            copy[indexCopy--] = array[j--];
+        }
+        for (int k = lStart; k <= rEnd; k++) {// 将排序好的数字复制到原来的数组
+            array[k] = copy[k];
+        }
     }
     
 }
