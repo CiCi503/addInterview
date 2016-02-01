@@ -645,5 +645,67 @@ public class MyTreeUtils {
         }
     }
     
+    /**
+     * 题目：输入一棵二叉树的根结点，求该树的深度。
+     * 从根结点到叶结点依次经过的结点（含根、叶结点）形成树的一条路径，
+     * 最长路径的长度为树的结点。
+     */
+    public static int treeDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = treeDepth(root.left);
+        int right = treeDepth(root.right);
+        return left > right ? (left + 1) : (right + 1);
+    }
+    
+    /**
+     * 题目：输入一棵二叉树的根节点，判断该树是否为平衡二叉树。
+     */
+    /*
+     * 方法1：利用前面的方法treeDepth()
+     * 该方法存在重复访问相同结点的问题，因此效率较低
+     */
+    public static boolean isAVLTree(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        int left = treeDepth(root.left);
+        int right = treeDepth(root.right);
+        if (Math.abs(left - right) > 1) {
+            return false;
+        }
+        return isAVLTree(root.left) && isAVLTree(root.right);
+    }
+    
+    /*
+     * 方法2；改进算法：着重解决结点重复访问问题。
+     * 考虑后序遍历，左→右→中，先遍历完了孩子结点再遍历根节点。
+     * 当中途发现有不满足AVL树的性质时，整个过程会立即退出。
+     * 可以采用返回特殊值的方式来检查子树是否为AVL树，本算法采取-1。
+     */
+    
+    public static boolean isAVLTree2(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return checkTreeHeight(root) == -1 ? false : true;
+    }
+
+    private static int checkTreeHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int lHeight = checkTreeHeight(root.left);
+        if (lHeight == -1) {
+            return -1;
+        }
+        int rHeight = checkTreeHeight(root.right);
+        if (rHeight == -1) {
+            return -1;
+        }
+        int diff = Math.abs(lHeight - rHeight);
+        return diff > 1 ? -1 : Math.max(lHeight, rHeight) + 1;
+    }
     
 }
