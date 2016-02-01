@@ -682,5 +682,122 @@ public class MyArrayUtils {
         }
     }
     
+    
+    /**
+     * 题目：统计一个数字在排序(递增)数组中出现的次数。
+     * 举个栗子：
+     * 输入的数组为{1, 2, 3, 3, 3, 3, 4, 5}和数字3，
+     * 输出为4。
+     */
+    /*
+     * 方法1：
+     * 分别从数组头尾进行遍历，记下k出现的开始和结束位置，然后再得到k的数量。
+     * 时间复杂度为O(n)
+     * 
+     * 但是没有利用到排序数组的性质（一般要想到二分法）
+     */
+    public static int getNumberOfK(int [] array , int k) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int len = array.length;
+        int firstK = -1, lastK = len;// 初始值设置很关键
+        for (int i = 0, j = len - 1; i < len && j >= 0; i++, j--) {
+            if (array[i] == k) {
+                lastK = i;
+            }
+            if (array[j] == k) {
+                firstK = j;
+            }
+        }
+        if (firstK < 0) {// 数组中没有k这个元素
+            return 0;
+        }
+        return lastK - firstK + 1;
+    }
+    
+    /*
+     * 方法2：
+     * 遍历数组，因为数字都是0-9，所以额外用一个长度为10的数组来记录各数字出现的次数。
+     * map的思路！
+     */
+    
+    /*
+     * 方法3：基于二分法（递归或者循环）
+     * 分别找到第一个和最后一个位置。
+     * 二分法的时间复杂度为O(logn)
+     */
+    public static int getNumberOfK2(int [] array , int k) {
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        int end = array.length - 1;
+        int firstK = getFirstKLoc(array, k , 0, end);// 当k不在数组中时，返回-1，下同
+        int lastK = getLastKLoc(array, k, 0, end);
+        if (firstK == -1 && lastK == -1) {
+            return 0;
+        }
+        return lastK - firstK + 1;
+   }
+
+    private static int getLastKLoc(int[] array, int k, int start, int end) {
+        int mid = -1;
+        while (start <= end) {
+            mid = (start + end) >> 1;
+            if (array[mid] == k) {
+             // 找到最后的位置：该位置元素等于k，并且其后一个元素不等于k，或者该位置位于最后
+                if (mid == end || array[mid+1] != k) {
+                    return mid;
+                }
+                start = mid + 1;
+            } else if (array[mid] > k) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    private static int getFirstKLoc(int[] array, int k, int start, int end) {
+        int mid = -1;
+        while (start <= end) {
+            mid = (start + end) >> 1;
+            if (array[mid] == k) {
+             // 找到第一个位置：该位置元素等于k，且其前一个元素不等于k，或者该位置位于最前
+                if (mid == 0 || array[mid - 1] != k) {
+                    return mid;
+                } 
+                end = mid - 1;
+            } else if (array[mid] > k) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }
+    
+    /*
+     * 二分查找的递归实现
+     */
+    public static int binarySearch(int[] arr, int k, int start, int end) {
+        if (arr == null || arr.length == 0 || start < 0 || end >= arr.length) {
+            return -1;// 不合理的输入
+        }
+        if (start > end) {// 给定数组中没有k，start=0或者end+1
+            return -1;
+        }
+        int mid = (start + end) >> 1;
+        if (arr[mid] > k) {
+            end = mid - 1;
+        } else if (arr[mid] < k) {
+            start = mid + 1;
+        } else {
+            return mid;
+        }
+        return binarySearch(arr, k, start, end);
+    }
+    
 }
 
