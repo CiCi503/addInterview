@@ -452,5 +452,59 @@ public class MyListUtils {
         return cloneHead;
     }
     
+    
+    /**
+     * 题目：输入两个链表，找出它们的第一个公共结点.
+     */
+    /*
+     * 方法1：暴力法。
+     * 在第1个链表上顺序遍历每个结点，每遍历一个结点时，
+     * 在第2个链表上顺序遍历每个结点。
+     * 假设两个链表长度分别为m和n，那么该算法的时间复杂度为O(mn).
+     * 效率很低！！
+     */
+    
+    /*
+     * 方法2：以时间换空间。
+     * 假如可以从结尾开始同时遍历两个结点，
+     * 那么最后一个两链表相等的结点就是它们的第一个公共结点。
+     * 但是单链表中的结点没有前趋引用，所以想到好两个栈，先把两个链表的结点分别
+     * 放入栈中，然后同时弹栈，以找到第一个公共结点。
+     * 时间复杂度和空间复杂度都是O(m+n)。
+     */
+    
+    /*
+     * 方法3：不用辅助空间。
+     * 两个单链表的长度不一定相同，让长链表先走”长度差”这么多步，
+     * 然后同时遍历两链表，它们是同步的，若没有公共结点，
+     * 它们可以同时到达结尾。
+     * 时间复杂度也是O(m+n)
+     */
+    public static Node findFirstCommonNode(Node phead1, Node phead2) {
+        if (phead1 == null || phead2 == null) {
+            return null;
+        }
+        int len1 = getSize(phead1);// getSize()方法用于求出链表长度，在前面已定义
+        int len2 = getSize(phead2);
+        int lenDif = len1 - len2;// 长度差
+        Node curlongList = phead1;
+        Node curshortList = phead2;
+        if (lenDif < 0) {
+           curlongList = phead2;
+           curshortList = phead1;
+           lenDif = -lenDif;
+        }
+        
+        for (int i = 0; i < lenDif; i++) {// 长链表先走lenDif步
+            curlongList = curlongList.next; 
+        }
+        // 当找到公共结点或者走到链表尽头时停止
+        while (curshortList != null && curlongList != null && curlongList != curshortList) {
+            curshortList = curshortList.next;
+            curlongList = curlongList.next;
+        }
+        return curlongList;
+
+    }
 
 }
