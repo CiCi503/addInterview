@@ -293,9 +293,102 @@ public class MyStringUtils {
     }
     
     
+    /**
+     * 题目：输入一个英文句子。翻转句子中单词的顺序，但单词内字符的顺序不变。
+     * 为简单起见，标点符号和普通字母一样处理。
+     * 举个栗子：输入字符串为"I am a student.",
+     * 输出为"student. a am I".
+     */
+    /*
+     * 时间复杂度为O(n),空间复杂度为O(1)
+     */
+    public static String reverseSentense(String sentense) {
+        if (sentense == null || sentense.isEmpty()) {
+            return sentense;
+        }
+        char[] sentenseChars = sentense.toCharArray();
+        int len = sentenseChars.length;
+        reverseHelper(sentenseChars, 0, len - 1);// 先翻转整个句子
+        for (int i = 0, j = 0; j <= len; j++) { // 翻转句子中每一个单词
+            if (j == len || sentenseChars[j] == ' ') {
+                reverseHelper(sentenseChars, i, j - 1);
+                i = j + 1;
+            }
+        }
+        return String.valueOf(sentenseChars);
+    }
+
+    private static void reverseHelper(char[] sentenseChars, int start, int end) {
+        char temp;
+        for (int i = start, j = end; i <= j; i++, j--) {
+            temp = sentenseChars[i];
+            sentenseChars[i] = sentenseChars[j];
+            sentenseChars[j] = temp;
+            
+        }
+    }
     
+    /**
+     * 题目：字符串的左旋操作是指把字符串前面的若干个字符转移到字符串的尾部。
+     * 请定义一个方法，实现字符串左旋操作的功能。
+     * 举个栗子：输入字符串为"abcdefg",数字为2，
+     * 输出为"cdefgab".
+     */
+    public static String leftRotateString(String str, int n) {
+        if (str == null || str.isEmpty() || n <= 0 || n >= str.length()) {
+            return str;
+        }
+        char[] chas = str.toCharArray();
+        int len = chas.length;
+        reverseHelper(chas, 0, n - 1);// 翻转0~n部分
+        reverseHelper(chas, n, len - 1);// 翻转n~len部分
+        reverseHelper(chas, 0, len - 1);// 翻转整个字符串
+        return String.valueOf(chas);
+    }
     
-    
+    /**
+     * 题目：请实现一个方法，用来找出字符流中第一个只出现一次的字符。
+     * 举个栗子：
+     * 当从字符流只读出前两个字符"go"时，第一个只出现一次的字符是"g",
+     * 当从字符流只读出前6个字符"google"时，第一个只出现一次的字符是"l"
+     */
+    /*
+     * 在O(1)时间内往容器中插入一个字符，以及更新一个字符对应的值。因此使用哈希表。
+     * 用字符的ASCII码作为哈希表的键，而把字符对应的位置作为哈希表的值。
+     * 
+     * occurance[i] = -1,表示没有ASCII码对应的字符
+     * occurance[i] = -2,表示这个ASCII码对应的字符出现多于1次
+     * occurance[i] >= 0,表示仅仅出现一次
+     */
+    public static char getFirstAppearingOneceChar(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        char[] chars = str.toCharArray();
+        int[] occurance = new int[256];
+        // 初始化occurance数组元素为-1
+        for (int i = 0, len = occurance.length; i < len; i++) {
+            occurance[i] = -1;
+        }
+        // 遍历chars数组，第一次出现字符时，在occurance中相应位置记录索引i
+        // 第二次出现时，在occurance中相应位置设置值-2
+        for (int i = 0, len = chars.length; i < len; i++) {
+            if (occurance[chars[i]] >= 0) {
+                occurance[chars[i]] = -2;
+            }  else if (occurance[chars[i]] == -1) {
+                occurance[chars[i]] = i;
+            }
+        }
+        int minIndex = chars.length - 1;
+        char result = 0;
+        for (int i = 0, len = occurance.length; i < len; i++) {
+            if (occurance[i] >= 0) {
+                minIndex = Math.min(minIndex, occurance[i]);
+                result = chars[minIndex];
+            }
+        }
+       return result; 
+    }
     
     
     
