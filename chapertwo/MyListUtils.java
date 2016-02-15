@@ -389,6 +389,32 @@ public class MyListUtils {
        return mergedHead;
     }
     
+    /*
+     * 解法3:
+     * 使用一个dummyHead结点来处理特殊情况！
+     */
+    public static Node mergeSortedList(Node head1, Node head2) {
+        Node dummyHead = new Node();
+        Node curr = dummyHead;
+        while (head1 != null && head2 != null) {
+            if (head1.value < head2.value) {
+                curr.next = head1;
+                head1 = head1.next;
+            } else {
+                curr.next = head2;
+                head2 = head2.next;
+            }
+            curr = curr.next;
+        }
+        if (head1 != null) {
+            curr.next = head1;
+        }
+        if (head2 != null) {
+            curr.next = head2;
+        }
+        return dummyHead.next;
+    }
+    
     /**
      * 题目：复杂链表的复制。
      * 在复杂链表中，每个结点除了有一个next，还有一个引用sibling，指向
@@ -506,6 +532,106 @@ public class MyListUtils {
         return curlongList;
     }
     
+    /**
+     * 题目：一个链表中包含环，如何找出环的入口结点？
+     */
+    /*
+     * 思路：首先利用快慢指针定位到环中的某一结点，
+     * 然后计算出环中含有的结点数nodesInLoop。
+     * 设置两个指针，fast首先走nodesInLoop步，
+     * 然后，slow和fast同时前进，它们相遇的结点就是环的入口结点。
+     */
+    
+    // 定位到链表中环的某一个结点
+    public static Node meetingInCircle(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node slow = head;
+        Node fast = head.next;
+        while (slow != fast) {
+            if (slow == null || fast == null) {// 无环单链表
+                return null;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
 
+    // 计算环中的结点个数
+    public static int circleNodeNum(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int nodesInLoop = 1;// 初始值
+        Node curr = node;
+        while (curr.next != node) {
+           nodesInLoop++;
+           curr = curr.next;
+        }
+        return nodesInLoop;
+    }
+    
+    public static Node findEntryNodeOfLoop(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Node meetingNode = meetingInCircle(head);
+        int nodesInLoop = circleNodeNum(meetingNode);
+        if (nodesInLoop == 0) {
+            return null;
+        }
+        
+        Node slow = head;
+        Node fast = head;
+        for (int i = 0; i < nodesInLoop; i++) {
+            fast = fast.next;
+        }
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
+    /**
+     * 题目：在一个排序的链表中，如何删除重复的结点？
+     * 举个栗子：
+     * 1→2→3→3→4→4→5 经过操作后变为 1→2→5
+     */
+    public static Node delDuplicateNode(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        int val;
+        Node curr = head;
+        Node prev = null;
+        Node next = null;
+        boolean isNeedDel = false;// 标记是否碰到了重复结点
+        while (curr != null) {
+            next = curr.next;
+            // curr不是尾结点
+            if (next != null && curr.value == next.value) {
+                isNeedDel = true;
+            }
+            if (!isNeedDel) {//没有碰到重复结点
+                prev = curr;
+                curr = curr.next;
+            } else {
+                val = curr.value;
+                isNeedDel = false;
+                while (curr != null && curr.value == val) {// 连续多个重复值结点
+                    curr = curr.next;
+                }
+                if (prev == null) {// 头部结点需要删除
+                    head = curr;
+                } else {
+                    prev.next = curr;
+                }
+            }
+        }
+        return head;
+    }
 
 }
