@@ -799,6 +799,224 @@ public class MyArrayUtils {
         return binarySearch(arr, k, start, end);
     }
     
+    /**
+     * 题目：一个整型数组里除了两个数字以外，其他的数字都出现了两次。
+     * 请写程序找出这两个只出现了一次的数字。时间复杂度为O(n),空间复杂度为O(1)。
+     */
+    
+    /*
+     * 思路：
+     * 利用异或运算的性质：任何一个数字异或它自己都等于0。
+     * 若一个数组中其余的数字出现2次，只有一个数字出现1次，那么对数组中数字进行异或运算，
+     * 结果为出现一次的那个数字，其余的两两抵消了。
+     * 因此，本题进行异或运算的结果为两个出现1次的数字的异或结果。
+     * 根据该结果的二进位表示中第一次出现1的位置，将数组中的数字分成两组，
+     * 每一组中含有一个出现次数为1的数字。
+     */
+    public static void findNumAppearOnce(int[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        int resultxor = 0;
+        int num1 = 0, num2 = 0;
+        int len = data.length;
+        
+        for (int i = 0; i < len; i++) {
+            resultxor ^= data[i];
+        }
+        if (resultxor == 0) {// 数组中的数字全部两两成对出现，异或结果为0！
+            System.out.println("未找到符合条件的数字！数组中所有数字均出现2次！");
+            return;
+        }
+        int indexBit1 = findFirstBit1(resultxor);// 找到二进制表示中第一个为1的位置
+        for (int i = 0; i < len; i++) {
+            if (isBit1(data[i], indexBit1)) {
+                num1 ^= data[i];
+            } else {
+                num2 ^= data[i];
+            }
+        }
+        // 可能出现超过2个数字的出现次数为1，因此必须进行一次检查！
+        if (checkTimes(data, num1) && checkTimes(data, num2)) {
+            System.out.printf("%d, %d", num1, num2);
+        } else {
+            System.out.println("不符合条件的数组！数组中超过2个数字的出现次数为1！");
+        }
+        
+    }
+
+    private static boolean checkTimes(int[] data, int target) {
+        int count = 0;
+        for (int num : data) {
+            if (num == target) {
+                count++;
+            }
+        }
+        return count == 1 ? true : false;
+    }
+
+    private static int findFirstBit1(int resultxor) {
+        int indexBit = 0;
+        while ((resultxor & (0x1 << indexBit)) == 0 && indexBit < Integer.SIZE - 1) {
+            indexBit++;
+        }
+        return indexBit;
+    }
+    
+    private static boolean isBit1(int num, int indexBit1) {
+        return (num & (0x1 << indexBit1)) != 0;
+    }
+    
+    /**
+     * 题目：输入一个递增排序的数组和一个数字s，在数组中查找2个数，
+     * 使得它们的和正好是s。若出现多对的和等于s，输出任意一对即可。
+     */
+    
+    /*
+     * 充分利用排序数组的大小关系，从两端扫描数组，时间复杂度为O(n)。
+     */
+    public static void findNumsWithSum(int[] data, int sum) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        int len = data.length;
+        int ahead = 0, behind = len - 1;
+        int curSum = 0;
+        while (ahead < behind) {
+            curSum = data[ahead] + data[behind];
+            if (curSum == sum) {
+               break;
+            } else if (curSum < sum) {
+                ahead++;
+            } else {
+                behind--;
+            }
+        }
+        if (ahead == behind) {
+            System.out.println("未找到符合条件的数字对！");
+        } else {
+            System.out.printf("[%d, %d]", data[ahead], data[behind]);
+        }
+    }
+    
+    /**
+     * 题目：输入一个正数s，打印出所有和为s的连续正整数（至少含2个数）。
+     * 举个栗子：
+     * 输入15，
+     * 由于1+2+3+4+5=4+5=7+8=17,所有输出有1-5，4-5和7-8一共3个连续序列。
+     */
+    public static void findContinuousSeq(int sum) {
+        if (sum < 3) {
+            return;
+        }
+        int small = 1, big = 2;
+        int mid = (sum + 1) >> 1;// small不能超过mid，否则curSum会永远大于sum
+        int curSum = small + big;
+        while (small < big) {
+            if (curSum == sum) {
+                printSeq(small, big);
+            } 
+            while (curSum > sum && small < mid) {
+                curSum -= small;
+                small++;
+                if (curSum == sum) {
+                    printSeq(small, big);
+                }
+            }
+            
+            big++;
+            if (big > sum) {// big超过sum，停止！
+                break;
+            }
+            curSum += big;
+        }
+        
+    }
+
+    private static void printSeq(int small, int big) {
+        while (small <= big) {
+            System.out.print(small + " ");
+            small++;
+        }
+        System.out.println();
+    }
+    
+    /**
+     *  题目：在一个长度为n的数组里的所有数字都在0到n-1的范围内。
+     *  数组中某些数字是重复的，但不知道有几个是重复了，也不知道每个数字重复了几次。
+     *  请找出数组中的任意一个重复的数字。
+     *  举个栗子：若输入长度为7的数组{2, 3, 1, 0, 2, 5, 3},那么对应的输出是重复的数字2或1。
+     */
+    /*
+     * 方法1：将数组元素进行排序，然后从头到尾扫描数组即可。
+     * 排序一个长度为n的数组的复杂度为O(nlogn)。
+     */
+    /* 
+     * 方法2：利用哈希表。
+     */
+    /*
+     * 方法3：数组中的数字从0到n-1，数组中共有n个元素，所以，若数组中没有重复元素，
+     * 排序后的数组中位置i的元素应该为i。
+     * 代码中虽然有一个双重循环，但是每个数字最多只要交换两次就能找到属于自己的位置，
+     * 因此总的时间复杂度为O(n),由于不需要额外分配内存，所以空间复杂度为O(1)。
+     */
+     public static int findDumpluicateNum(int[] numbers) {
+         if (numbers == null || numbers.length == 0) {// 检查数组有效性
+             return -1;
+         }
+         int len = numbers.length;
+         int temp;
+         for (int num : numbers) {
+             if (num < 0 || num >= len) {// 检查数组中的数字是否超出了0~(n-1)的范围
+                 return -1;
+             }
+         }
+         for (int i = 0; i < len; i++) {
+             while (numbers[i] != i) {
+                 if (numbers[i] == numbers[numbers[i]]) {// 返回重复的数字（符合条件的数字）
+                     return numbers[i];
+                 }
+                 // 交换numbers[i]和numbers[numbers[i]]
+                 temp = numbers[i];
+                 numbers[i] = numbers[temp];
+                 numbers[temp] = temp;
+             }
+         }
+         return -1;
+     }
+     
+     /**
+      * 题目：给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],
+      * 其中B中的元素B[i]=A[0]*A[1]*..*A[i-1]*A[i+1]*...*A[n-1]
+      * 要求不能使用除法！
+      */
+     /*
+      * 方法1：n-1个数字连乘，得到数组B。时间复杂度为O(n^2)
+      */
+     /*
+      * 方法2：将B[i]拆分成C[i]*D[i],
+      * C[i]=A[0]*A[1]*..*A[i-1],D[i]=A[i+1]*...*A[n-1],
+      * 那么C[i]=C[i-1]*A[i-1],D[i]=D[i+1]*A[i+1].
+      * 这样可以把时间复杂度将为O(n)!
+      */
+     public static int[] multiplyArr(int[] array) {
+        if (array == null || array.length == 0) {
+            return null;
+        }
+        int len = array.length;
+        int[] result = new int[len];
+        result[0] = 1;// 关键值！
+        for (int i = 1; i < len; i++) {// 从第二个位置开始
+            result[i] = result[i - 1] * array[i - 1];
+        }
+        int temp = 1;// 关键值！
+        for (int i = len - 2; i >= 0; i--) {// 从倒数第二个位置开始
+            temp *= array[i + 1];
+            result[i] *= temp;
+        }
+        return result;
+    }
+    
     
 }
 
