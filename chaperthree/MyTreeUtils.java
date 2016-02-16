@@ -813,6 +813,7 @@ public class MyTreeUtils {
      * 题目：按照之字型打印二叉树，即第一行从左到右，第二行从右到左，第三行从左到右，以此类推。
      */
     /*
+     * 解法1：
      * 思路：该题目跟上题的唯一区别是不同的行，打印顺序不同：
      * 奇数行，从左向右；偶数行，从右向左。
      * 借助public void add(int index, E element)方法来实现从头插入元素。
@@ -854,5 +855,103 @@ public class MyTreeUtils {
             }
         }
         return result;
+    }
+    
+    /*
+     * 解法2：利用java里的双端队列Deque,
+     * 当从左到右打印时，从头部出，然后分别按左、右孩子的顺序将孩子结点从尾部进入Deque;
+     * 当从右到左打印时，从尾部出，然后分别按右、左孩子的顺序将孩子结点从头部进入Deque。
+     * 要两个变量,currLast表示当前层的最后一个结点，nextLast为下一层的。
+     * 结点从Deque哪一端进入，就应该从哪一端输出，第一个进入的孩子结点，是下一层最后一个出来的。
+     */
+    public static void printTreeByZigzag2(TreeNode pRoot) {
+        if (pRoot == null) {
+           return; 
+        }
+        int level = 1;
+        boolean orderLR = true;
+        TreeNode currLast = pRoot;
+        TreeNode nextLast = null;
+        TreeNode temp = null;
+        Deque<TreeNode> dq = new LinkedList<>();
+        dq.offer(pRoot);
+        System.out.print("Level" + level + ": ");
+        while (!dq.isEmpty()) {
+            if (orderLR) {
+                temp = dq.pollFirst();
+                if (temp.left != null) {
+                    nextLast = nextLast == null ? temp.left : nextLast;
+                    dq.offerLast(temp.left);
+                }
+                if (temp.right != null) {
+                    nextLast = nextLast == null ? temp.right : nextLast;
+                    dq.offerLast(temp.right);
+                }
+            } else {
+                temp = dq.pollLast();
+                if (temp.right != null) {
+                    nextLast = nextLast == null ? temp.right : nextLast;
+                    dq.offerFirst(temp.right);
+                }
+                if (temp.left != null) {
+                    nextLast = nextLast == null ? temp.left : nextLast;
+                    dq.offerFirst(temp.left);
+                }
+            }
+            System.out.print(temp.value + " ");
+            if (temp == currLast && !dq.isEmpty()) {
+                orderLR = !orderLR;
+                currLast = nextLast;
+                nextLast = null;
+                level++;
+                System.out.println();
+                System.out.print("Level" + level + ": ");
+            }
+        }
+    }
+    
+    /**
+     * 题目：实现二叉树的序列化和反序列化
+     */
+    // 序列化
+    public static String treeSerialize(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        StringBuilder serialSb = new StringBuilder();
+        serializeHelper(root, serialSb);
+        return serialSb.toString();
+    }
+
+    private static void serializeHelper(TreeNode root, StringBuilder serialSb) {
+        if (root == null) {
+            serialSb.append("#!");
+            return;
+        }
+        serialSb.append(root.value).append("!");
+        serializeHelper(root.left, serialSb);
+        serializeHelper(root.right, serialSb);
+    }
+    
+    // 需要一个全局变量，当然也可以将数组里的元素存放在一个队列里，但这会增加空间复杂度
+    public static int index = -1;
+    // 反序列化
+    public static TreeNode deserialize(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        String[] nodes = str.split("!");
+        return deserializeHelper(nodes);
+    }
+
+    private static TreeNode deserializeHelper(String[] nodes) {
+        index++;
+        if ("#".equals(nodes[index])) {
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.valueOf(nodes[index]));
+        root.left = deserializeHelper(nodes);
+        root.right = deserializeHelper(nodes);
+        return root;
     }
 }
