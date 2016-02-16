@@ -764,7 +764,47 @@ public class MyTreeUtils {
         if (root1.value != root2.value) {
             return false;
         }
-        
         return isSymmetricalHelper(root1.left, root2.right) && isSymmetricalHelper(root1.right, root2.left);
+    }
+    
+    /**
+     * 题目：从上到下按层打印二叉树，同一层的结点按从左到右的顺序打印，每层打印一行。
+     */
+    /*
+     * 要设定两个变量，toBePrinted用来表示本层还剩余的结点数，nextLevel表示下一层的结点数
+     */
+    public static ArrayList<ArrayList<Integer>> Print(TreeNode pRoot) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (pRoot == null) {
+            return result;
+        }
+        
+        LinkedList<TreeNode> temp = new LinkedList<>();
+        ArrayList<Integer> eachLevel = new ArrayList<>();
+        
+        int toBePrinted = 1;
+        int nextLevel = 0;
+        temp.offer(pRoot);
+        
+        while (!temp.isEmpty()) {
+            TreeNode node = temp.poll();
+            eachLevel.add(node.value);
+            toBePrinted--;
+            if (node.left != null) {
+                temp.offer(node.left);
+                nextLevel++;
+            }
+            if (node.right != null) {
+                temp.offer(node.right);
+                nextLevel++;
+            }
+            if (toBePrinted==0) {// 本层没有结点了
+                result.add(new ArrayList<>(eachLevel));
+                eachLevel.clear();
+                toBePrinted = nextLevel;
+                nextLevel = 0;
+            }
+        }
+        return result;
     }
 }
