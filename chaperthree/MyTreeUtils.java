@@ -742,4 +742,29 @@ public class MyTreeUtils {
         }
       return result;  
     }
+    
+    /**
+     * 题目：请实现一个方法，用来判断一棵树是不是对称的。若一棵二叉树和它的镜像一样，那么它就是对称的。
+     */
+    public static boolean isSymmetrical(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return isSymmetricalHelper(root, root);
+        
+    }
+
+    private static boolean isSymmetricalHelper(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        if (root1.value != root2.value) {
+            return false;
+        }
+        
+        return isSymmetricalHelper(root1.left, root2.right) && isSymmetricalHelper(root1.right, root2.left);
+    }
 }
