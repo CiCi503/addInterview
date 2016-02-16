@@ -1,6 +1,7 @@
 package chaperthree;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -798,11 +799,58 @@ public class MyTreeUtils {
                 temp.offer(node.right);
                 nextLevel++;
             }
-            if (toBePrinted==0) {// 本层没有结点了
+            if (toBePrinted==0) {// 本层没有结点了！
                 result.add(new ArrayList<>(eachLevel));
                 eachLevel.clear();
                 toBePrinted = nextLevel;
                 nextLevel = 0;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * 题目：按照之字型打印二叉树，即第一行从左到右，第二行从右到左，第三行从左到右，以此类推。
+     */
+    /*
+     * 思路：该题目跟上题的唯一区别是不同的行，打印顺序不同：
+     * 奇数行，从左向右；偶数行，从右向左。
+     * 借助public void add(int index, E element)方法来实现从头插入元素。
+     */
+    public static ArrayList<ArrayList<Integer>> printTreeByZigzag(TreeNode pRoot) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (pRoot == null) {
+            return result;
+        }
+        LinkedList<TreeNode> temp = new LinkedList<>();
+        ArrayList<Integer> eachLevel = new ArrayList<>();
+        int rows = 1;
+        int toBePrinted = 1;
+        int nextLevel = 0;
+        temp.add(pRoot);
+        while (!temp.isEmpty()) {
+            TreeNode node = temp.poll();
+            toBePrinted--;
+            if (rows % 2 == 1) {// 奇数行，从左向右
+                eachLevel.add(0, node.value);
+            } else {// 偶数行，从右向左
+                eachLevel.add(node.value);
+            }
+            if (node.left != null) {
+                temp.offer(node.left);
+                nextLevel++;
+            }
+            if (node.right != null) {
+                temp.offer(node.right);
+                nextLevel++;
+            }
+            
+            if (toBePrinted == 0) {
+                result.add(new ArrayList<>(eachLevel));
+                eachLevel.clear();
+                toBePrinted = nextLevel;
+                nextLevel = 0;
+                rows++;
             }
         }
         return result;
