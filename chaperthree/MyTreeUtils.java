@@ -954,4 +954,38 @@ public class MyTreeUtils {
         root.right = deserializeHelper(nodes);
         return root;
     }
+    
+    /**
+     * 题目：给定一棵二叉搜索树，请找出其中第k个结点。
+     */
+    /*
+     * 思路：BST的中序遍历是一个有序的从小到大的数组
+     */
+    public static TreeNode KthNodeOfBST(TreeNode root, int k) {
+        if (root == null || k <= 0) {
+            return null;
+        }
+        int count = 0;
+        TreeNode kthNode = null;
+        TreeNode curr = root;
+        TreeNode eachNode = null;
+        Stack<TreeNode> stack = new Stack<>();
+        
+        while (!stack.isEmpty() || curr != null) {
+            if (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            } else {
+                eachNode = stack.pop();
+                count++;
+                if (count == k) {
+                    kthNode = eachNode;// 找到第k个结点！
+                    break;
+                }
+                curr = eachNode.right;
+            }
+        }
+        
+       return kthNode; 
+    }
 }
