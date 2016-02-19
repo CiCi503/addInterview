@@ -1017,6 +1017,60 @@ public class MyArrayUtils {
         return result;
     }
     
+     
+     /**
+      * 题目：设计一个方法，用来判断在一个矩阵中是否存在一条包含字符串所有字符的路径。
+      * 路径可以从矩阵中任意一格开始，每一步有上下左右四个方向可以选择。若一条路径经过了
+      * 矩阵中的某一格，那么该路径不能再次进入该格子。
+      * 
+      * @param matrix
+      * @param rows
+      * @param cols
+      * @param str
+      * @return
+      */
+     /*
+      * 回溯法典型栗子
+      * visited数组来标记是否已经走过！
+      */
+     public static boolean hasPath(char[] matrix, int rows, int cols, char[] str) {
+         if (matrix == null || matrix.length == 0 || rows < 1 || cols < 1 || str == null || str.length == 0) {
+            return false;
+        }
+         boolean[] visited = new boolean[rows * cols];
+         int pathLen = 0;
+         // 可以从矩阵的任意位置开始，i，j分别表示开始位置的横纵坐标
+         for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (hasPathHelper(matrix, rows, i, cols, j, str, visited, pathLen)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+     }
+
+    private static boolean hasPathHelper(char[] matrix, int rows, int row, int cols,
+            int col, char[] str, boolean[] visited, int pathLen) {
+        if (pathLen == str.length) {
+            return true;
+        }
+        boolean hasPath = false;
+        if (row >= 0 && row < rows && col >= 0 && col < cols && matrix[row*cols+col] == str[pathLen] &&!visited[row*cols+col]) {
+            pathLen++;
+            visited[row * cols + col] = true;
+            hasPath = hasPathHelper(matrix, rows, row - 1, cols, col, str, visited, pathLen) || 
+                    hasPathHelper(matrix, rows, row + 1, cols, col, str, visited, pathLen) ||
+                    hasPathHelper(matrix, rows, row, cols, col - 1, str, visited, pathLen) ||
+                    hasPathHelper(matrix, rows, row, cols, col + 1, str, visited, pathLen);
+            
+            if (!hasPath) {
+                pathLen--;
+                visited[row * cols + col] = false;
+            }
+        }
+       return hasPath; 
+    }
     
 }
 
