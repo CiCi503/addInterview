@@ -1072,5 +1072,54 @@ public class MyArrayUtils {
        return hasPath; 
     }
     
+    /**
+     * 题目：地上有一个m行n列的方格。一个机器人从坐标(0,0)的格子开始移动，
+     * 它每次可以向四个方向中的一个进行移动，但不能进入行列坐标的数位之和大于k的格子。
+     * 请问该机器人能够到达多少个格子？
+     * 举个栗子：
+     * 当k=18时，机器人可以进入方格(35,37)，因为3+5+3+7<=18，
+     * 而不能进入方格(35,38),因为3+5+3+8=19>18。
+     * 
+     * @param threshold i 限制阈值
+     * @param rows 方格行数
+     * @param cols 方格列数
+     * @return 机器人可以到达的格子数
+     */
+    /*
+     * 同样是回溯法。
+     * 机器人要进入(i,j)时，首先要判断是否可以进入该格子，
+     * 进入该格子后，再判断它周围的四个格子能否进入。
+     */
+    public int movingCount(int threshold, int rows, int cols) {
+        boolean[] visited = new boolean[rows * cols];
+        return movingCountHelper(threshold, 0, rows, 0, cols, visited);
+    }
+
+    private int movingCountHelper(int threshold, int row, int rows, int col,
+            int cols, boolean[] visited) {
+        int count = 0;
+        if (row >= 0 && row < rows && col >= 0 && col < cols && !visited[row*cols+col] && checkSum(threshold, row, col)) {
+            visited[row*cols+col] = true;
+            count = 1 + movingCountHelper(threshold, row + 1, rows, col, cols, visited) +
+                    movingCountHelper(threshold, row - 1, rows, col, cols, visited) + 
+                    movingCountHelper(threshold, row, rows, col + 1, cols, visited) + 
+                    movingCountHelper(threshold, row, rows, col - 1, cols, visited);
+        }
+        return count;
+    }
+
+    private boolean checkSum(int threshold, int row, int col) {
+        int sum = getDigitSum(row) + getDigitSum(col);
+        return sum > threshold ? false : true;
+    }
+
+    private int getDigitSum(int digit) {
+        int sum = 0;
+        while (digit != 0) {
+            sum += digit % 10;
+            digit /= 10;
+        }
+        return sum;
+    }
 }
 
