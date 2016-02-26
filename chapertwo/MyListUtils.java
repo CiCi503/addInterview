@@ -1,5 +1,7 @@
 package chapertwo;
 
+import java.util.ArrayDeque;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class MyListUtils {
@@ -633,5 +635,50 @@ public class MyListUtils {
         }
         return head;
     }
-
+    
+    
+    /**
+     * 题目：判断一个链表是否为回文结构
+     */
+    
+    /*
+     * 方法1：两次遍历单链表，时间复杂度为O(n)，
+     * 需要一个栈（FILO），空间复杂度也为O(n)。
+     * 这是最基本的方法。
+     */
+    public static boolean isPalindrome(Node head) {
+        if (head == null) {
+            return false;
+        }
+        boolean result = true;
+        Node curr = head;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        while (curr != null) {
+            stack.push(curr.value);
+            curr = curr.next;
+        }
+        curr = head;
+        while (curr != null) {
+            if (curr.value != stack.pop()) {
+                result = false;
+                break;
+            }
+            curr = curr.next;
+        }
+        return result;
+    }
+    /*
+     * 方法2：
+     */
+    public static boolean isPalindrome2(Node head) {
+        if (head == null) {
+            return false;
+        }
+        Node fast = head;
+        Node slow = head;
+        while (fast != null) {
+            
+        }
+    }
+    
 }
