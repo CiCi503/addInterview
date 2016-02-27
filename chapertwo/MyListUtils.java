@@ -7,7 +7,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class MyListUtils {
 
     /**
-     * 正向遍历单链表
+     * 题目：正向遍历单链表，并打印
      */
     public static void printList(Node head) {
         if (head == null) {
@@ -21,7 +21,7 @@ public class MyListUtils {
     }
 
     /**
-     * 获取单链表的长度
+     * 题目：获取单链表的长度
      */
     public static int getSize(Node head) {
         if (head == null) {
@@ -60,11 +60,11 @@ public class MyListUtils {
 
     /*******************删除单链表中特定结点的关键是找到它前面的那个结点***********************************/
     /**
-     * 题目：删除单链表的倒数第K个结点
+     * 题目：删除单链表的倒数第k个结点
      */
     /*
      * 倒数第k个结点是正数第n-k+1个结点，实际要找的是它（要删除的结点）的前一个结点 
-     * 一定要注意序号 
+     * 一定要注意序号 ！！
      * 
      * 方法1：(遍历两遍单链表)
      * 遍历单链表，每经过一个结点，k减去1，那么遍历到单链表末尾时，
@@ -93,7 +93,6 @@ public class MyListUtils {
             curr = head;
             while (++k != 0) {
                 curr = curr.next;
-
             }
             curr.next = curr.next.next;
         }
@@ -713,6 +712,8 @@ public class MyListUtils {
         
         Node fast = head;
         Node slow = head;
+        Node tail = null;
+        Node curr2 = null;
         boolean result = true; 
         while (fast.next != null && fast.next.next != null) {
             slow = slow.next;
@@ -720,37 +721,35 @@ public class MyListUtils {
         }// 此时，slow指向中间结点
         
         // 反转单链表后半部分
-       Node curr = slow.next; 
-       slow.next = null;
-       fast = curr.next;
-       while (fast != null) {
+       Node curr = slow.next; // curr此时是后半部分第一个结点
+       slow.next = null; // 切断两部分
+       while (curr != null) {
+           fast = curr.next;
            curr.next = slow;
            slow = curr;
            curr = fast;
-           fast = fast.next;
        }
-       curr.next = slow; // 此时curr在结尾结点处
-       fast = curr;// fast保存最后一个结点
-       slow = head;// slow指向单链表起点，从两头开始遍历
-       while (slow != null && fast != null) {
-           if (slow.value != fast.value) {
+       tail = slow;// tail保存最后一个结点
+       
+       curr = tail; // curr定位到单链表末尾
+       curr2 = head;// curr2指向单链表起点，从两头开始遍历
+       while (curr != null && curr2 != null) {
+           if (curr.value != curr2.value) {
             result = false;
             break;
            }
-           slow = slow.next;
-           fast = fast.next;
-       }
-       // 将反转的链表复原
-       fast = curr.next;
-       Node curr2 = fast.next;
-       curr.next = null;
-       while (curr2 != null) {
-           fast.next = curr;
-           curr = fast;
-           fast = curr2;
+           curr = curr.next;
            curr2 = curr2.next;
        }
-       fast.next = curr;
+       
+       curr2 = null;
+       // 恢复反转的链表
+       while (tail != null) {
+           curr = tail.next;
+           tail.next = curr2;
+           curr2 = tail;
+           tail = curr;
+       }
        return result;
     }
     
