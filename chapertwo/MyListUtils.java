@@ -668,7 +668,8 @@ public class MyListUtils {
         return result;
     }
     /*
-     * 方法2：
+     * 方法2：将后一半结点压入栈中，然后再从头遍历
+     * 比方法1，空间上节省了一半，但是优化不明显
      */
     public static boolean isPalindrome2(Node head) {
         if (head == null) {
@@ -676,9 +677,81 @@ public class MyListUtils {
         }
         Node fast = head;
         Node slow = head;
-        while (fast != null) {
-            
+        boolean result = true;
+        
+        while (fast.next != null && fast.next.next != null) {// 奇数/偶数个结点要分开
+            fast = fast.next.next;
+            slow = slow.next;
         }
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        while (slow.next != null) {
+            slow = slow.next;
+            stack.push(slow.value);
+        }
+        slow = head;
+        while (!stack.isEmpty()) {
+            if (slow.value != stack.pop()) {
+                result = false;
+                break;
+            }
+            slow = slow.next;
+        }
+        return result;
+    }
+    
+    /*
+     * 方法3:
+     * 将链表后半部分反转，然后前后两个部分进行比较。
+     * 举个栗子：
+     * 1→2→3→2→1翻转为1→2→3←2←1。
+     * 时间复杂度不变，空间复杂度为O(1)。
+     */
+    public static boolean isPalindrome3(Node head) {
+        if (head == null) {
+            return false;
+        }
+        
+        Node fast = head;
+        Node slow = head;
+        boolean result = true; 
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }// 此时，slow指向中间结点
+        
+        // 反转单链表后半部分
+       Node curr = slow.next; 
+       slow.next = null;
+       fast = curr.next;
+       while (fast != null) {
+           curr.next = slow;
+           slow = curr;
+           curr = fast;
+           fast = fast.next;
+       }
+       curr.next = slow; // 此时curr在结尾结点处
+       fast = curr;// fast保存最后一个结点
+       slow = head;// slow指向单链表起点，从两头开始遍历
+       while (slow != null && fast != null) {
+           if (slow.value != fast.value) {
+            result = false;
+            break;
+           }
+           slow = slow.next;
+           fast = fast.next;
+       }
+       // 将反转的链表复原
+       fast = curr.next;
+       Node curr2 = fast.next;
+       curr.next = null;
+       while (curr2 != null) {
+           fast.next = curr;
+           curr = fast;
+           fast = curr2;
+           curr2 = curr2.next;
+       }
+       fast.next = curr;
+       return result;
     }
     
 }
