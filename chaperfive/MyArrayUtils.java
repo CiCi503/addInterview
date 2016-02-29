@@ -7,8 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-
 public class MyArrayUtils {
     /**
      * 题目：输入一个递增排序数组的一个旋转，输出旋转数组的最小值。
@@ -27,9 +25,10 @@ public class MyArrayUtils {
         int right = arr.length - 1;
         int mid = left;// mid取值left，考虑到数组可能没有经过旋转，此时最小值就是第一个元素了
         
-        /* 注意：这里能不以left和right大小比较来控制循环！！ */
+        /* 注意：这里不能以left和right大小比较来控制循环！！ */
+        
         while (arr[left] >= arr[right]) {// 等号是考虑到初始数组始末元素相等的情况
-         // low指向了前段递增数列的最后一个，high指向了后段递增数列的第一个
+         // left指向了前半段递增数列的最后一个，right指向了后半段递增数列的第一个
          // 最小的数就应该是high指向的元素
             if (right - left == 1) {
                 mid = right;
@@ -40,10 +39,9 @@ public class MyArrayUtils {
             if (arr[mid] == arr[left] && arr[mid] == arr[right]) {
                 return minInorder(arr, left, right);
             }
-         // 特殊情况arr[mid] == arr[left]，那么left~mid这一段元素是重复数字，最小值应该在后半段找
             if (arr[mid] < arr[left]) {
                 right = mid;
-            } else {
+            } else { // 特殊情况arr[mid] == arr[left]，那么最小值应该在前半段找
                 left = mid;
             }
         }
@@ -54,16 +52,14 @@ public class MyArrayUtils {
     private static int minInorder(int[] arr, int left, int right) {
         int result = arr[left];
         for (int i = left + 1; i <= right; i++) {
-            if (arr[i] < result) {
-                result = arr[i];
-            }
+            result = (arr[i] < result ? arr[i] : result);
         }
         return result;
     }
     
     /**
      * 题目：有一个数组是由有序递增数组经过旋转得到的，现在要在这种数组中
-     * 查询某个元素是否存在，不存在返回-1，存在返回索引值。
+     * 查询某个元素是否存在，不存在返回-1，存在则返回索引值。
      */
     /*
      * 注意考虑重复元素，可以先不考虑这种情况，得到解答后再进行修改(*_*)
@@ -99,8 +95,6 @@ public class MyArrayUtils {
     }
     
     
-    
-    
     /**
      * 题目：输入一个整数数组，实现一个方法来调整数组中的元素，
      *       使得奇数位于前半部分，偶数位于后半部分。
@@ -130,6 +124,7 @@ public class MyArrayUtils {
             }
         }
     }
+    
     private static void swap(int[] arr, int prev, int post) {
         int temp = arr[prev];
         arr[prev] = arr[post];
@@ -1163,7 +1158,47 @@ public class MyArrayUtils {
         }
         return sum;
     }
+   
+    /**
+     * 题目：在一个含有重复元素的有序数组中删除重复元素，使得每个元素只出现一次。
+     * 返回新数组的长度，不允许开辟新的空间。
+     * 举个栗子：
+     * 输入为{1, 1, 2, 3, 3}，那么压缩后的数组应该只包含1,2,3这三个元素，
+     * 因此输出为3
+     */
+    public static int removeDeplicate(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int index = 0;
+        for (int i = 1, len = nums.length; i < len; i++) {
+            if (nums[index] != nums[i]) {
+                nums[++index] = nums[i];
+            }
+        }
+        return index + 1;
+    }
     
+    /**
+     * 题目：在上题基础上，一个元素至多出现两次。
+     */
+    public static int removeDeplicatepro(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int index = 0;
+        int count = 0;
+        for (int i = 1, len = nums.length; i < len; i++) {
+            if (nums[index] != nums[i]) {
+                nums[++index] = nums[i];
+                count = 0;
+            } else if (nums[index] == nums[i] && count < 1) {
+                nums[++index] = nums[i];
+                count++;
+            }
+       }
+       return index + 1;
+    }
 
 }
 
