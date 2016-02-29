@@ -17,7 +17,7 @@ public class MyArrayUtils {
      * 输出为1。
      */
     /*
-     * 要考虑到含有重复元素
+     * 要考虑到含有重复元素的情况
      */
     public static int getRotateArrayMin(int[] arr) {
         if (arr == null || arr.length == 0) {
@@ -26,6 +26,8 @@ public class MyArrayUtils {
         int left = 0;
         int right = arr.length - 1;
         int mid = left;// mid取值left，考虑到数组可能没有经过旋转，此时最小值就是第一个元素了
+        
+        /* 注意：这里能不以left和right大小比较来控制循环！！ */
         while (arr[left] >= arr[right]) {// 等号是考虑到初始数组始末元素相等的情况
          // low指向了前段递增数列的最后一个，high指向了后段递增数列的第一个
          // 最小的数就应该是high指向的元素
@@ -58,6 +60,46 @@ public class MyArrayUtils {
         }
         return result;
     }
+    
+    /**
+     * 题目：有一个数组是由有序递增数组经过旋转得到的，现在要在这种数组中
+     * 查询某个元素是否存在，不存在返回-1，存在返回索引值。
+     */
+    /*
+     * 注意考虑重复元素，可以先不考虑这种情况，得到解答后再进行修改(*_*)
+     */
+    public static int getindexInRotateArr(int[] arr, int target) {
+        if (arr == null || arr.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = arr.length - 1;
+        int mid = 0;
+        while (left <= right) {
+            mid = (left + right) >> 1;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < arr[left]) {// 后半部分大的旋转数组
+                if (target > arr[mid] && target <= arr[right]) {// 此时，后半部分是有序的
+                    left = mid;
+                } else {
+                    right = mid;
+                }
+            } else if (arr[mid] > arr[left]) {// 前半部分大的旋转数组
+                if (target>= arr[left] && target < arr[mid]) {// 此时，前半部分是有序的
+                    right = mid;
+                } else {
+                    left = mid;
+                }
+            } else {// 特殊情况：arr[mid] == arr[left]
+               left++; 
+            }
+        }
+        return -1;
+    }
+    
+    
+    
     
     /**
      * 题目：输入一个整数数组，实现一个方法来调整数组中的元素，
@@ -1121,5 +1163,7 @@ public class MyArrayUtils {
         }
         return sum;
     }
+    
+
 }
 
