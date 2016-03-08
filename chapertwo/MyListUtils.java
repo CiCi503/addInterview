@@ -753,4 +753,58 @@ public class MyListUtils {
        return result;
     }
     
+    /**
+     * 题目：给出两个无序的单链表l1和l2，链表中可能存在重复的结点值，
+     * 要求以nO(lgn)的时间复杂度将它们合并成一个有序的单链表。
+     */
+    
+    public static Node mergeTwoList(Node head1, Node head2) {
+        if (head1 == null) {
+            return head2;
+        }
+        if (head2 == null) {
+            return head1;
+        }
+        Node curr = head1;
+        while (curr.next != null) {
+            curr = curr.next;
+        }
+        curr.next = head2;
+        while (curr.next != null) {
+            curr = curr.next;
+        }// 将两个链表连接起来，curr指向结尾结点
+        mergeTwoListHelper(head1, curr);
+        return head1;
+    }
+    // 单链表的快排
+    private static void mergeTwoListHelper(Node head, Node end) {
+        
+        if (head != end) {
+            Node pivot = partition(head, end);
+            mergeTwoListHelper(head, pivot);
+            mergeTwoListHelper(pivot.next, end);
+        }
+    }
+
+    private static Node partition(Node head, Node end) {
+        int pivotVal = head.value;
+        Node left = head;
+        Node right = head.next;
+        while (right != end.next) {
+            if (right.value < pivotVal) {
+                swap(right, left.next);
+                left = left.next;
+            }
+            right = right.next;
+        }
+        swap(head, left);
+        return left;
+    }
+
+    public static void swap(Node node1, Node node2) {
+        int temp = node1.value;
+        node1.value = node2.value;
+        node2.value = temp;
+    }
+    
 }
