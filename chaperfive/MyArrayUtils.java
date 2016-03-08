@@ -41,7 +41,7 @@ public class MyArrayUtils {
             }
             if (arr[mid] < arr[left]) {
                 right = mid;
-            } else { // 特殊情况arr[mid] == arr[left]，那么最小值应该在前半段找
+            } else {
                 left = mid;
             }
         }
